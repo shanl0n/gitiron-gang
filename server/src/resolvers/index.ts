@@ -1,7 +1,9 @@
+import { mockGameStats } from "../utils/mock"
+
 export const resolvers = {
   Query:{
-    apiStatus: () => {
-      return { status: 'The API is working correctly.' }
+    playerGameStats: () => {
+      return mockGameStats
     }
   },
   // Mutation: {

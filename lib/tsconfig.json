@@ -10,6 +10,8 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "declaration": true,
+    "rootDir": "./src",
+    "outDir": "./lib",
 
     /* Bundler mode */
     "moduleResolution": "bundler",

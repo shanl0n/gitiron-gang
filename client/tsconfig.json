@@ -28,7 +28,7 @@
       "@models": ["../lib/src/models"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../server/src/utils"],
   "references": [
     { "path": "./tsconfig.node.json" },
     { "path": "../lib" }

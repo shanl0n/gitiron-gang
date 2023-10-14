@@ -7,12 +7,47 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { mockGameStats } from "../../utils/mock";
+import { useQuery, gql } from '@apollo/client';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton } from "@mui/material";
+import { PlayerGameStats } from "@models";
+
+const GET_PLAYERS = gql`
+  query GetPlayers {
+    playerGameStats {
+      playerId
+      playerName
+      position
+      manager
+      passYards
+      passTouchdowns
+      interceptions
+      rushAttempts
+      rushYards
+      rushTouchdowns
+      receptions
+      receivingYards
+      receivingTouchdowns
+      returnYards
+      returnTouchdowns
+      fumbleTouchdowns
+      twoPoints
+      lostFumbles
+      totalPoints
+    }
+  }
+`
+
+interface GetPlayersData {
+  playerGameStats: PlayerGameStats[];
+}
 
 
 const PlayerList = () => {
+  const { loading, error, data } = useQuery<GetPlayersData>(GET_PLAYERS);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+
   const handleAddPlayer = (playerId: string) => {console.log(`adding player ${playerId}`)}
   return (
     <TableContainer component={Paper} className="data-table">
@@ -50,7 +85,7 @@ const PlayerList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mockGameStats.map((row) => (
+          {data?.playerGameStats.map((row) => (
             <TableRow
               key={row.position}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
