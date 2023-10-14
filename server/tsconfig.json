@@ -10,10 +10,8 @@
     "types": ["node"],
     "composite": true,
     "paths": {
-      "@models": ["../lib/src/models"]
+      "@models": ["./src/models"]
     }
   },
-  "references": [
-    { "path": "../lib" }
-  ]
+  "references": []
 }

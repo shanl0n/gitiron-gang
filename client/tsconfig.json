@@ -25,12 +25,12 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@models": ["../lib/src/models"]
+      "@models": ["../server/src/models"]
     }
   },
-  "include": ["src", "../server/src/utils"],
+  "include": ["src"],
   "references": [
     { "path": "./tsconfig.node.json" },
-    { "path": "../lib" }
+    { "path": "../server" }
   ]
 }
