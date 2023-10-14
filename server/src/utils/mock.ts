@@ -1,4 +1,4 @@
-import { PlayerGameStats } from "@models";
+import { PlayerGameStats } from "../models";
 
 export const mockGameStats: PlayerGameStats[] = [
   {

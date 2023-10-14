@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "esm": true
+  },
   "compilerOptions": {
     "rootDirs": ["src"],
     "outDir": "dist",
@@ -8,10 +11,9 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "types": ["node"],
-    "composite": true,
-    "paths": {
-      "@models": ["./src/models"]
-    }
+    "composite": true
   },
-  "references": []
+  "lib": ["esnext"],
+  "references": [],
+  "include": ["src"]
 }
