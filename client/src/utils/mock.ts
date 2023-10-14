@@ -1,4 +1,5 @@
 interface PlayerGameStats {
+  playerId: string;
   playerName: string;
   position: string;
   manager: string;
@@ -21,6 +22,7 @@ interface PlayerGameStats {
 
 export const mockGameStats: PlayerGameStats[] = [
   {
+    playerId: "player1",
     playerName: "Jared Goff",
     position: "QB",
     manager: "Sean",
@@ -41,6 +43,7 @@ export const mockGameStats: PlayerGameStats[] = [
     totalPoints: 36.0,
   },
   {
+    playerId: "player2",
     playerName: "Tony Pollard",
     position: "RB",
     manager: "Sean",

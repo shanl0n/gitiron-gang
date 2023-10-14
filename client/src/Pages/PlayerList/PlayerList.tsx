@@ -8,15 +8,18 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { mockGameStats } from "../../utils/mock";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { IconButton } from "@mui/material";
 
 
-
-const PlayerList = () => (
+const PlayerList = () => {
+  const handleAddPlayer = (playerId: string) => {console.log(`adding player ${playerId}`)}
+  return (
     <TableContainer component={Paper} className="data-table">
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell colSpan={2}/>
+            <TableCell colSpan={3}/>
             <TableCell colSpan={3} align="center">Passing</TableCell>
             <TableCell colSpan={3} align="center">Rushing</TableCell>
             <TableCell colSpan={3} align="center">Receiving</TableCell>
@@ -25,8 +28,8 @@ const PlayerList = () => (
             <TableCell colSpan={1} align="center">Fum</TableCell>
             <TableCell colSpan={1} align="center">Fantasy</TableCell>
           </TableRow>
-    
           <TableRow>
+            <TableCell align="center">Action</TableCell>
             <TableCell align="center">Player</TableCell>
             <TableCell align="center">Manager</TableCell>
             <TableCell align="center">Yds</TableCell>
@@ -52,6 +55,7 @@ const PlayerList = () => (
               key={row.position}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
+              <TableCell align="center"><IconButton color="primary" onClick={() => handleAddPlayer(row.playerId)}><AddCircleIcon/></IconButton></TableCell>
               <TableCell align="right">
                 <div>{row.playerName}</div>
                 <div>{row.position}</div>
@@ -76,5 +80,5 @@ const PlayerList = () => (
           ))}
         </TableBody>
       </Table>
-    </TableContainer>);
+    </TableContainer>)};
 export default PlayerList;
