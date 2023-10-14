@@ -19,3 +19,24 @@ export interface PlayerGameStats {
   lostFumbles: number;
   totalPoints: number;
 };
+
+export interface Player {
+  id: string;
+  name: string;
+  jersey: string;
+  last_name: string;
+  first_name: string;
+};
+
+export interface GameStats {
+  id: string;
+  stastics: {
+    home: {
+      id: string;
+      summary: {
+        rushing
+      }
+
+    }
+  }
+};

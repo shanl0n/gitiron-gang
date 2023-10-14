@@ -3,35 +3,27 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { MongoClient } from "mongodb";
 import { typeDefs } from "./schema/index";
 import { resolvers } from "./resolvers/index";
+  import { setupDatasource } from "./datasource";
+import { ResolverContext } from "./context";
 
 // Replace the uri string with your connection string.
-const uri = "mongodb://localhost:27017/gitiron_gang";
-const client = new MongoClient(uri);
-async function run() {
-  try {
-    const database = client.db("gitiron_gang");
-    const users = database.collection("users");
-    const players = database.collection("players");
-    const teams = database.collection("teams");
-    const season_schedule = database.collection("season_schedule");
-    const game_stats = database.collection("game_stats");
+const dbUri = "mongodb://localhost:27017/gitiron_gang";
+const dbClient = new MongoClient(dbUri);
 
-    const query = { name: "Elijah Wilkinson" };
-    const player = await players.findOne(query);
-    console.log(player);
-  } finally {
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-const server = new ApolloServer({
+const server = new ApolloServer<ResolverContext>({
   typeDefs,
   resolvers,
 });
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+const run = async () => {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+    context: async ({req}) => ({
+      dataSources: setupDatasource(dbClient),
+    }),
+  });
+  
+  console.log(`🚀  Server ready at: ${url}`);
+}
 
-console.log(`🚀  Server ready at: ${url}`);
+run().catch(console.dir);
