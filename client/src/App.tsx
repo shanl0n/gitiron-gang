@@ -12,6 +12,8 @@ import {
   from,
 } from "@apollo/client";
 import { ErrorLink, onError } from "@apollo/client/link/error";
+import MyComponent from "./components/MyComponent";
+import PlayerList from "./Pages/PlayerList";
 
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
@@ -26,10 +28,6 @@ const link = from([
   new HttpLink({ uri: "http:://localhost:6969/graphql" }),
 ]);
 
-// const client = new ApolloClient({
-//   cache: InMemoryCache(),
-//   link: link,
-// });
 
 function App() {
   const [count, setCount] = useState(0);
@@ -37,9 +35,11 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/MyComponent" element={<MyComponent />} />
         <Route path="/" element={<SignInSide />} />
         <Route path="/myteam" element={<MyTeam />} />
         <Route path="/rules" element={<Rules />} />
+        <Route path="/players" element={<PlayerList />}/>
       </Routes>
     </>
   );
