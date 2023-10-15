@@ -51,3 +51,10 @@ export interface Player {
   position: string;
   gameStatsSummary: GameStatsSummary;
 };
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  fantasy_team_id: number;
+};
