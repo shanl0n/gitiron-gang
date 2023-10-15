@@ -63,6 +63,7 @@ export interface User {
 export interface FantasyTeam {
   id: string;
   name: string;
+  players: Player[];
 }
 
 export interface FantasyTeamPlayer {
