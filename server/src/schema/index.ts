@@ -1,28 +1,44 @@
 export const typeDefs = `#graphql
 
   type Query {
-    playerGameStats: [PlayerGameStats!]!
+    players: [Player!]!
   }
 
-  type PlayerGameStats {
-    playerId: ID!
-    playerName: String!
+  type Player {
+    id: ID!
+    name: String!
     position: String!
-    manager: String!
-    passYards: Int!
-    passTouchdowns: Int!
-    interceptions: Int!
-    rushAttempts: Int!
-    rushYards: Int!
-    rushTouchdowns: Int!
-    receptions: Int!
-    receivingYards: Int!
-    receivingTouchdowns: Int!
-    returnYards: Int!
-    returnTouchdowns: Int!
-    fumbleTouchdowns: Int!
-    twoPoints: Int!
-    lostFumbles: Int!
+    gameStatsSummary: GameStatsSummary!
+  }
+
+  type GameStatsSummary {
+    rushing: RushingStats!
+    receiving: ReceivingStats!
+    passing: PassingStats!
+    fumbles: FumbleStats!
     totalPoints: Float!
+  }
+
+  type RushingStats {
+    attempts: Int!
+    touchdowns: Int! 
+    yards: Int!
+  }
+  
+  type ReceivingStats {
+    receptions: Int!
+    yards: Int!
+    touchdowns: Int!
+  }
+  
+  type PassingStats {
+    completions: Int!
+    yards: Int!
+    touchdowns: Int!
+    interceptions: Int!
+  }
+  
+  type FumbleStats {
+    fumbles: Int!
   }
 `

@@ -10,36 +10,42 @@ import Paper from "@mui/material/Paper";
 import { useQuery, gql } from '@apollo/client';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton } from "@mui/material";
-import { PlayerGameStats } from "@models";
+import { Player } from "@models";
 
 const GET_PLAYERS = gql`
   query GetPlayers {
-    playerGameStats {
-      playerId
-      playerName
+    players { 
+      id
+      name
       position
-      manager
-      passYards
-      passTouchdowns
-      interceptions
-      rushAttempts
-      rushYards
-      rushTouchdowns
-      receptions
-      receivingYards
-      receivingTouchdowns
-      returnYards
-      returnTouchdowns
-      fumbleTouchdowns
-      twoPoints
-      lostFumbles
-      totalPoints
+      gameStatsSummary {
+        rushing {
+          attempts
+          touchdowns
+          yards
+        }
+        receiving {
+          receptions
+          yards
+          touchdowns
+        }
+        passing {
+          completions
+          yards
+          touchdowns
+          interceptions
+        }
+        fumbles {
+          fumbles
+        }
+        totalPoints
+      }
     }
   }
 `
 
 interface GetPlayersData {
-  playerGameStats: PlayerGameStats[];
+  players: Player[];
 }
 
 
@@ -55,11 +61,9 @@ const PlayerList = () => {
         <TableHead>
           <TableRow>
             <TableCell colSpan={3}/>
-            <TableCell colSpan={3} align="center">Passing</TableCell>
+            <TableCell colSpan={4} align="center">Passing</TableCell>
             <TableCell colSpan={3} align="center">Rushing</TableCell>
             <TableCell colSpan={3} align="center">Receiving</TableCell>
-            <TableCell colSpan={2} align="center">Return</TableCell>
-            <TableCell colSpan={2} align="center">Misc</TableCell>
             <TableCell colSpan={1} align="center">Fum</TableCell>
             <TableCell colSpan={1} align="center">Fantasy</TableCell>
           </TableRow>
@@ -67,6 +71,7 @@ const PlayerList = () => {
             <TableCell align="center">Action</TableCell>
             <TableCell align="center">Player</TableCell>
             <TableCell align="center">Manager</TableCell>
+            <TableCell align="center">Comp</TableCell>
             <TableCell align="center">Yds</TableCell>
             <TableCell align="center">TD</TableCell>
             <TableCell align="center">Int</TableCell>
@@ -76,43 +81,38 @@ const PlayerList = () => {
             <TableCell align="center">Rec</TableCell>
             <TableCell align="center">Yds</TableCell>
             <TableCell align="center">TD</TableCell>
-            <TableCell align="center">Yds</TableCell>
-            <TableCell align="center">Td</TableCell>
-            <TableCell align="center">FumTD</TableCell>
-            <TableCell align="center">2PT</TableCell>
-            <TableCell align="center">Lost</TableCell>
+            <TableCell align="center">Fumbles</TableCell>
             <TableCell align="center">Points</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.playerGameStats.map((row) => (
+          {data?.players.map((player) => {
+            const stats = player.gameStatsSummary
+            return (
             <TableRow
-              key={row.position}
+              key={player.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell align="center"><IconButton color="primary" onClick={() => handleAddPlayer(row.playerId)}><AddCircleIcon/></IconButton></TableCell>
+              <TableCell align="center"><IconButton color="primary" onClick={() => handleAddPlayer(player.id)}><AddCircleIcon/></IconButton></TableCell>
               <TableCell align="right">
-                <div>{row.playerName}</div>
-                <div>{row.position}</div>
+                <div>{player.name}</div>
+                <div>{player.position}</div>
               </TableCell>
-              <TableCell align="right">{row.manager}</TableCell>
-              <TableCell align="right">{row.passYards}</TableCell>
-              <TableCell align="right">{row.passTouchdowns}</TableCell>
-              <TableCell align="right">{row.interceptions}</TableCell>
-              <TableCell align="right">{row.rushAttempts}</TableCell>
-              <TableCell align="right">{row.rushYards}</TableCell>
-              <TableCell align="right">{row.rushTouchdowns}</TableCell>
-              <TableCell align="right">{row.receptions}</TableCell>
-              <TableCell align="right">{row.receivingYards}</TableCell>
-              <TableCell align="right">{row.receivingTouchdowns}</TableCell>
-              <TableCell align="right">{row.returnYards}</TableCell>
-              <TableCell align="right">{row.returnTouchdowns}</TableCell>
-              <TableCell align="right">{row.fumbleTouchdowns}</TableCell>
-              <TableCell align="right">{row.twoPoints}</TableCell>
-              <TableCell align="right">{row.lostFumbles}</TableCell>
-              <TableCell align="right">{row.totalPoints}</TableCell>
+              <TableCell align="right">TODO</TableCell>
+              <TableCell align="right">{stats.passing.completions}</TableCell>
+              <TableCell align="right">{stats.passing.yards}</TableCell>
+              <TableCell align="right">{stats.passing.touchdowns}</TableCell>
+              <TableCell align="right">{stats.passing.interceptions}</TableCell>
+              <TableCell align="right">{stats.rushing.attempts}</TableCell>
+              <TableCell align="right">{stats.rushing.yards}</TableCell>
+              <TableCell align="right">{stats.rushing.touchdowns}</TableCell>
+              <TableCell align="right">{stats.receiving.receptions}</TableCell>
+              <TableCell align="right">{stats.receiving.yards}</TableCell>
+              <TableCell align="right">{stats.receiving.touchdowns}</TableCell>
+              <TableCell align="right">{stats.fumbles.fumbles}</TableCell>
+              <TableCell align="right">{stats.totalPoints}</TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
     </TableContainer>)};
