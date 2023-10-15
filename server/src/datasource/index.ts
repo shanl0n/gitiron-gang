@@ -1,6 +1,12 @@
 import { MongoClient } from "mongodb";
 import { Collection } from "mongoose";
-import { Player, GameStats, User, FantasyTeam } from "../models";
+import {
+  Player,
+  GameStats,
+  User,
+  FantasyTeam,
+  FantasyTeamPlayer,
+} from "../models";
 
 export interface Datasource {
   users: Collection<User>;
@@ -9,6 +15,7 @@ export interface Datasource {
   seasonSchedule: Collection;
   gameStats: Collection<GameStats>;
   fantasyTeams: Collection<FantasyTeam>;
+  fantasyTeamPlayers: Collection<FantasyTeamPlayer>;
 }
 
 export const setupDatasource = (client: MongoClient): Datasource => {
@@ -19,6 +26,7 @@ export const setupDatasource = (client: MongoClient): Datasource => {
     teams: db.collection("teams"),
     seasonSchedule: db.collection("season_schedule"),
     gameStats: db.collection("game_stats"),
-    fantasyTeams: db.collection("fantasy_teams")
+    fantasyTeams: db.collection("fantasy_teams"),
+    fantasyTeamPlayers: db.collection("fantasy_team_players"),
   } as Datasource;
 };

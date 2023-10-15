@@ -1,7 +1,11 @@
 export const typeDefs = `#graphql
 
   type Query {
-    players: [Player!]!
+    players(ids: [ID!]): [Player!]!
+  }
+
+  type Mutation {
+    addPlayer(id: ID!): Boolean!  
   }
 
   type Player {
@@ -41,4 +45,4 @@ export const typeDefs = `#graphql
   type FumbleStats {
     fumbles: Int!
   }
-`
+`;
