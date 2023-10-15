@@ -1,3 +1,5 @@
+
+
 export interface PlayerGameStats {
   playerId: string;
   playerName: string;
@@ -20,23 +22,46 @@ export interface PlayerGameStats {
   totalPoints: number;
 };
 
+interface RushingStats {
+  attempts: number;
+  touchdowns: number;
+  yards: number;
+};
+
+interface ReceivingStats {
+  receptions: number;
+  yards: number;
+  touchdowns: number;
+}
+
+interface PassingStats {
+  completions: number;
+  yards: number;
+  touchdowns: number;
+  interceptions: number;
+}
+
+// interface FumbleStats {
+//   fumbles: number;
+// }
+export interface GameStats {
+  gameId: string;
+  playerId: string;
+  teamId: string;
+  homeTeam: boolean;
+  position: string;
+  statistics: {
+    rushing: RushingStats;
+    receiving: ReceivingStats;
+    passing: PassingStats;
+    // fumbles: FumbleStats;
+  };
+}
+
 export interface Player {
   id: string;
   name: string;
   jersey: string;
-  last_name: string;
-  first_name: string;
-};
-
-export interface GameStats {
-  id: string;
-  stastics: {
-    home: {
-      id: string;
-      summary: {
-        rushing
-      }
-
-    }
-  }
+  teamId: string;
+  position: string;
 };
