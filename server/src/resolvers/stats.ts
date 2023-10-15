@@ -1,4 +1,4 @@
-import { ResolverContext } from "../context";
+import { RequestContext } from "../context";
 import { GameStatsSummary, PassingStats, Player, ReceivingStats, RushingStats } from "../models";
 
 const MULTIPLIERS = {
@@ -22,7 +22,7 @@ const MULTIPLIERS = {
 
 export const statsResolvers = {
   Player: {
-    gameStatsSummary: async (parent: Player, args, ctx: ResolverContext, info) => {
+    gameStatsSummary: async (parent: Player, args, ctx: RequestContext, info) => {
       const summary = {
         rushing: {
           attempts: 0,

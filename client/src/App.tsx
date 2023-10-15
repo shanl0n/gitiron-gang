@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Login, { TOKEN_KEY } from "./Pages/Login";
+import Login from "./Pages/Login";
 import MyTeam from "./Pages/MyTeam";
 import Rules from "./Pages/Rules";
 import PlayerList from "./Pages/PlayerList";
@@ -13,12 +13,18 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
+const TOKEN_KEY = "gitiron-gang-token";
+
 const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
 
 function App() {
-  const token = localStorage.getItem(TOKEN_KEY);
+  const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
+  const handleLogin = (token: string) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    setToken(token);
+  };
   if (!token) {
-    return <Login />;
+    return <Login onLogin={handleLogin} />;
   }
   const authLink = setContext((_, { headers }) => ({
     headers: {

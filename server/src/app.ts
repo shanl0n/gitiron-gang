@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
 import { typeDefs } from "./schema/index";
 import { resolvers } from "./resolvers/index";
 import { setupDatasource } from "./datasource";
-import { ResolverContext } from "./context";
+import { RequestContext } from "./context";
 import express from "express";
 import { Auth } from "./auth";
 
@@ -17,33 +17,38 @@ export const buildApp = async () => {
   const dbClient = new MongoClient(dbUri);
   const dataSources = setupDatasource(dbClient);
 
-  const auth = Auth(dataSources);
-
   const app = express();
 
-  const gqlServer = new ApolloServer<ResolverContext>({
+    app.use(cors());
+
+  app.use((req, _, next) => {
+    req.ctx = {
+      dataSources: dataSources,
+    };
+    next();
+  });
+
+  const gqlServer = new ApolloServer<RequestContext>({
     typeDefs,
     resolvers,
   });
 
   await gqlServer.start();
 
-  app.use(
-    "/graphql",
-    cors<cors.CorsRequest>(),
+  app.post(
+    "/login",
     bodyParser.json(),
-    expressMiddleware(gqlServer, {
-      context: async ({ req }) => ({
-        dataSources,
-      }),
-    })
+    Auth.login,
   );
 
+  app.use("/graphql", Auth.verify)
+
   app.use(
-    "/login",
-    cors<cors.CorsRequest>(),
+    "/graphql",
     bodyParser.json(),
-    auth.login,
+    expressMiddleware(gqlServer, {
+      context: async ({ req }) => req.ctx
+    })
   );
 
   return app;

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,8 +12,6 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-export const TOKEN_KEY = "gitiron-gang-token";
 
 function Copyright(props: any) {
   return (
@@ -33,10 +31,14 @@ function Copyright(props: any) {
   );
 }
 
+interface Props {
+  onLogin: (token: string) => void;
+}
+
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-const Login=() => {
+const Login = ({ onLogin }: Props) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -47,17 +49,25 @@ const Login=() => {
       password: data.get("password"),
     };
 
-    const resp = await fetch("http://localhost:4000/login", {
+    await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(credentials)
-    }).then((resp) => resp.json());
-    
-    const token = resp.token;
-    localStorage.setItem(TOKEN_KEY, token);
-
+      body: JSON.stringify(credentials),
+    })
+      .then(async (resp) => {
+        if (resp.ok) {
+          const json = await resp.json();
+          onLogin(json.token);
+        } else {
+          const body = await resp.text();
+          alert(body);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   return (
@@ -154,5 +164,5 @@ const Login=() => {
       </Grid>
     </ThemeProvider>
   );
-}
+};
 export default Login;
