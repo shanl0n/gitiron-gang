@@ -53,8 +53,14 @@ export interface Player {
 };
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  fantasy_team_id: number;
+  password: string;
+  fantasyTeamId: string;
 };
+
+export interface FantasyTeam {
+  id: string;
+  name: string;
+}

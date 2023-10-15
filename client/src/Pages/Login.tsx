@@ -13,6 +13,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+export const TOKEN_KEY = "gitiron-gang-token";
+
 function Copyright(props: any) {
   return (
     <Typography
@@ -34,14 +36,28 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const Login=() => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const credentials = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    const resp = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(credentials)
+    }).then((resp) => resp.json());
+    
+    const token = resp.token;
+    localStorage.setItem(TOKEN_KEY, token);
+
   };
 
   return (
@@ -139,3 +155,4 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+export default Login;
