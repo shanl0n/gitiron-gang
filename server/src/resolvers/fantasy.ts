@@ -10,6 +10,13 @@ export const fantasyResolvers = {
       });
       return response.acknowledged;
     },
+    dropPlayer: async (parent, args, ctx: RequestContext, info) => {
+      const response = await ctx.dataSources.fantasyTeamPlayers.deleteOne({
+        playerId: args.id as string,
+        fantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
+      });
+      return response.acknowledged;
+    },
   },
   Query: {
     fantasyTeam: async (parent, args, ctx: RequestContext, info) => {
@@ -19,7 +26,12 @@ export const fantasyResolvers = {
     },
   },
   FantasyTeam: {
-    players: async (parent: FantasyTeamModel, args, ctx: RequestContext, info) => {
+    players: async (
+      parent: FantasyTeamModel,
+      args,
+      ctx: RequestContext,
+      info
+    ) => {
       const players = await ctx.dataSources.fantasyTeamPlayers
         .find({ fantasyTeamId: parent.id })
         .toArray();
@@ -33,7 +45,12 @@ export const fantasyResolvers = {
     },
   },
   Player: {
-    fantasyTeam: async (parent: PlayerModel, args, ctx: RequestContext, info) => {
+    fantasyTeam: async (
+      parent: PlayerModel,
+      args,
+      ctx: RequestContext,
+      info
+    ) => {
       return await ctx.dataSources.fantasyTeamPlayers
         .findOne({ playerId: parent.id })
         .then((fantasyTeamPlayer) => {

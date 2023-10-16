@@ -1,18 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useQuery, gql } from "@apollo/client";
 
 import { FantasyTeam, Player } from "@types";
 import Button from "@mui/material/Button";
-import AddPlayer from "../PlayerList/AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
+import DropPlayer from "./DropPlayer";
 
 const GET_FANTASY_TEAM = gql`
   query GetFantasyTeam {
@@ -58,18 +51,34 @@ interface GetFantasyTeamData {
 }
 
 const MyTeam = () => {
-  const { loading, error, data } =
+  const [dropping, setDropping] = useState(false);
+  const { loading, error, data, refetch } =
     useQuery<GetFantasyTeamData>(GET_FANTASY_TEAM);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
-  if (!data) return <p>No players found</p>
+  if (!data) return <p>No players found</p>;
+
+  const handlePlayerDropped = () => {
+    setDropping(false);
+    refetch();
+  };
+
+  const renderAction = (player: Player) => {
+    return (
+      dropping && <DropPlayer onDrop={handlePlayerDropped} player={player} />
+    );
+  };
 
   return (
     <>
       <Button href="/players">Add</Button>
-      <Button href="/players">Drop</Button>
+      <Button onClick={() => setDropping(true)}>Drop</Button>
       <Button href="/players">Trade</Button>
-      <PlayerTable players={data.fantasyTeam.players}/>
+      <PlayerTable
+        players={data.fantasyTeam.players}
+        renderAction={renderAction}
+      />
     </>
   );
 };

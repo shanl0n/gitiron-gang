@@ -5,15 +5,18 @@ export const typeDefs = `#graphql
     fantasyTeam: FantasyTeam!
   }
 
+  type Mutation {
+    addPlayer(id: ID!): Boolean!
+    dropPlayer(id: ID!): Boolean!
+  }
+
   type FantasyTeam {
     id: String!
     name: String!
     players: [Player!]!
   }
 
-  type Mutation {
-    addPlayer(id: ID!): Boolean!  
-  }
+
 
   type Player {
     id: ID!
