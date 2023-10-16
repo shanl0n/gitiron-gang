@@ -21,6 +21,10 @@ const GET_FANTASY_TEAM = gql`
         id
         name
         position
+        fantasyTeam {
+          id
+          name
+        }
         gameStatsSummary {
           rushing {
             attempts

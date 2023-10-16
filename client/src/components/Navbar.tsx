@@ -1,10 +1,12 @@
 import React from "react";
 
 const Navbar = () => {
-  return
+  return (
   <>
-    <div>this is another navbar</div>;<div>This is navbar</div>;
-  </>;
+    <div>League</div>
+    <div>My Team</div>
+    <div>Players</div>
+  </>)
 };
 
 export default Navbar;
