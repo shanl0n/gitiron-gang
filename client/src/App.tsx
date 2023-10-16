@@ -13,6 +13,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import Navbar from "./components/Navbar";
+import GameCentre from "./Pages/GameCentre/GameCentre";
 
 const TOKEN_KEY = "gitiron-gang-token";
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/myteam" element={<MyTeam />} />
         <Route path="/rules" element={<Rules />} />
         <Route path="/players" element={<PlayerList />} />
+        <Route path="/gamecentre" element={<GameCentre />} />
       </Routes>
     </ApolloProvider>
   );
