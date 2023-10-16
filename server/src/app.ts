@@ -15,7 +15,7 @@ const dbUri = "mongodb://localhost:27017/gitiron_gang";
 
 export const buildApp = async () => {
   const dbClient = new MongoClient(dbUri);
-  const dataSources = setupDatasource(dbClient);
+  const dataSources = await setupDatasource(dbClient);
 
   const app = express();
 

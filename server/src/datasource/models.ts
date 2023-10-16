@@ -1,6 +1,16 @@
 import { FumbleStats, PassingStats, ReceivingStats, RushingStats } from "../schema/types";
 
 export interface GameStatsModel {
+  id: string;
+  summary: {
+    week: {
+      id: string;
+    };
+  };
+  playerGameStats: PlayerGameStatsModel[];
+}
+
+export interface PlayerGameStatsModel {
   gameId: string;
   playerId: string;
   teamId: string;

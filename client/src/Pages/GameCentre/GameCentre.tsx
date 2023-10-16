@@ -2,6 +2,7 @@ import React from "react";
 
 import { gql, useQuery } from "@apollo/client";
 import { FantasyGame } from "@types";
+import PlayerTable from "../../components/PlayerTable";
 
 const GET_FANTASY_GAME = gql`
   query GetFantasyGame {
@@ -16,6 +17,33 @@ const GET_FANTASY_GAME = gql`
   }
   fragment TeamFragment on FantasyTeam {
     name
+    players {
+      id
+      name
+      position
+      gameStatsSummary {
+        rushing {
+          attempts
+          touchdowns
+          yards
+        }
+        receiving {
+          receptions
+          yards
+          touchdowns
+        }
+        passing {
+          completions
+          yards
+          touchdowns
+          interceptions
+        }
+        fumbles {
+          fumbles
+        }
+        totalPoints
+      }
+    }
   }
 `;
 
@@ -34,7 +62,9 @@ const GameCentre = () => {
   return (
   <>
     <div>{data.fantasyGame.myTeam.name}</div>
+    <PlayerTable players={data.fantasyGame.myTeam.players}/>
     <div>{data.fantasyGame.opponentsTeam.name}</div>
+    <PlayerTable players={data.fantasyGame.opponentsTeam.players}/>
   </>
 );
 };

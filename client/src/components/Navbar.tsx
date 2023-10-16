@@ -17,6 +17,7 @@ const Navbar = () => {
     <Options>League</Options>
     <Options><Link href="/myteam">My Team</Link></Options>
     <Options><Link href="/players">Players</Link></Options>
+    <Options><Link href="/gamecentre">Game Center</Link></Options>
   </Wrapper>)
 };
 
