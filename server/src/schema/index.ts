@@ -3,6 +3,7 @@ export const typeDefs = `#graphql
   type Query {
     players: [Player!]!
     fantasyTeam: FantasyTeam!
+    fantasyGame: FantasyGame!
   }
 
   type Mutation {
@@ -14,6 +15,11 @@ export const typeDefs = `#graphql
     id: String!
     name: String!
     players: [Player!]!
+  }
+
+  type FantasyGame {
+    myTeam: FantasyTeam!
+    opponentsTeam: FantasyTeam!
   }
 
 

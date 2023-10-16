@@ -39,3 +39,10 @@ export interface FantasyTeamPlayerModel {
   playerId: string;
   fantasyTeamId: string;
 }
+
+export interface FantasyGameModel {
+  id: string;
+  seasonId: string;
+  weekId: string;
+  fantasyTeamIds: string[];
+}

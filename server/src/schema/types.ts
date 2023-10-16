@@ -40,3 +40,7 @@ export type FantasyTeam = FantasyTeamModel & {
   players: Player[];
 }
 
+export interface FantasyGame {
+  myTeam: FantasyTeam;
+  opponentsTeam: FantasyTeam;
+}

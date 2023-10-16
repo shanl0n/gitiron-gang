@@ -24,6 +24,21 @@ export const fantasyResolvers = {
         id: ctx.jwtPayload!.fantasyTeamId,
       });
     },
+    fantasyGame: async (parent, args, ctx: RequestContext, info) => {
+      const myTeamId = ctx.jwtPayload!.fantasyTeamId;
+
+      const fantasyGame = await ctx.dataSources.fantasyGames.findOne({
+        fantasyTeamIds: myTeamId,
+        weekId: currentWeekId()
+      });
+
+      const opponentTeamId = fantasyGame.fantasyTeamIds.find(id => id !== myTeamId);
+
+      return {
+        myTeam: await ctx.dataSources.fantasyTeams.findOne({ id: myTeamId }),
+        opponentsTeam: await ctx.dataSources.fantasyTeams.findOne({id: opponentTeamId}),
+      };
+    },
   },
   FantasyTeam: {
     players: async (
@@ -64,3 +79,8 @@ export const fantasyResolvers = {
     },
   },
 };
+
+const currentWeekId = () => {
+  // hard coded for now
+  return "d0c2a811-2484-4da9-9082-a1f7ee98f96d";
+}
