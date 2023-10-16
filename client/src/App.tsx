@@ -12,6 +12,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import Navbar from "./components/Navbar";
 
 const TOKEN_KEY = "gitiron-gang-token";
 
@@ -38,6 +39,7 @@ function App() {
   });
   return (
     <ApolloProvider client={client}>
+      <Navbar />
       <Routes>
         <Route path="/" element={<MyTeam />} />
         <Route path="/myteam" element={<MyTeam />} />

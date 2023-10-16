@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useQuery, gql } from "@apollo/client";
 
-import { Player } from "@models";
+import { Player } from "@types";
 import AddPlayer from "./AddPlayer";
 import { redirect } from "react-router-dom";
 
@@ -19,6 +19,10 @@ const GET_PLAYERS = gql`
       id
       name
       position
+      fantasyTeam {
+        id
+        name
+      }
       gameStatsSummary {
         rushing {
           attempts
@@ -108,7 +112,7 @@ const PlayerList = ( ) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">
-                  <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />
+                  {player.fantasyTeam ? `In fantasy team ${player.fantasyTeam.name}` : <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />}
                 </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>

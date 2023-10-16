@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useQuery, gql } from "@apollo/client";
 
-import { FantasyTeam, Player } from "@models";
+import { FantasyTeam, Player } from "@types";
 import Button from "@mui/material/Button";
 import AddPlayer from "../PlayerList/AddPlayer";
 
@@ -21,6 +21,10 @@ const GET_FANTASY_TEAM = gql`
         id
         name
         position
+        fantasyTeam {
+          id
+          name
+        }
         gameStatsSummary {
           rushing {
             attempts
@@ -61,6 +65,8 @@ const MyTeam = () => {
   return (
     <>
       <Button href="/players">Add</Button>
+      <Button href="/players">Drop</Button>
+      <Button href="/players">Trade</Button>
       <TableContainer component={Paper} className="data-table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

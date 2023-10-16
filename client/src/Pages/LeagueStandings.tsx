@@ -23,8 +23,9 @@ const LeagueStandings: React.FC = () => {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Wins</th>
-            <th>Losses</th>
+            <th>W-L-D</th>
+            <th>PF</th>
+            <th>PA</th>
           </tr>
         </thead>
         <tbody>

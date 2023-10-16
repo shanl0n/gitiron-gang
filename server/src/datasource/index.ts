@@ -1,21 +1,15 @@
 import { MongoClient } from "mongodb";
 import { Collection } from "mongoose";
-import {
-  Player,
-  GameStats,
-  User,
-  FantasyTeam,
-  FantasyTeamPlayer,
-} from "../models";
+import { FantasyTeamModel, FantasyTeamPlayerModel, GameStatsModel, PlayerModel, UserModel } from "./models";
 
 export interface Datasource {
-  users: Collection<User>;
-  players: Collection<Player>;
+  users: Collection<UserModel>;
+  players: Collection<PlayerModel>;
   teams: Collection;
   seasonSchedule: Collection;
-  gameStats: Collection<GameStats>;
-  fantasyTeams: Collection<FantasyTeam>;
-  fantasyTeamPlayers: Collection<FantasyTeamPlayer>;
+  gameStats: Collection<GameStatsModel>;
+  fantasyTeams: Collection<FantasyTeamModel>;
+  fantasyTeamPlayers: Collection<FantasyTeamPlayerModel>;
 }
 
 export const setupDatasource = (client: MongoClient): Datasource => {

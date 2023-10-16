@@ -1,5 +1,5 @@
 import { RequestContext } from "../context";
-import { GameStatsSummary, PassingStats, Player, ReceivingStats, RushingStats } from "../models";
+import { GameStatsSummary, PassingStats, Player, ReceivingStats, RushingStats } from "../schema/types";
 
 const MULTIPLIERS = {
   PASSING: {
