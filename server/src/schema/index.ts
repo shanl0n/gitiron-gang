@@ -22,8 +22,6 @@ export const typeDefs = `#graphql
     opponentsTeam: FantasyTeam!
   }
 
-
-
   type Player {
     id: ID!
     name: String!
