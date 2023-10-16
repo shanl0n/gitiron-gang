@@ -38,6 +38,7 @@ export type Player = Omit<PlayerModel, "team_id"> & {
 
 export type FantasyTeam = FantasyTeamModel & {
   players: Player[];
+  totalPoints: number;
 }
 
 export interface FantasyGame {
