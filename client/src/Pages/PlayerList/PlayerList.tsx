@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useQuery, gql } from "@apollo/client";
 
-import { Player } from "@models";
+import { Player } from "@types";
 import AddPlayer from "./AddPlayer";
 import { redirect } from "react-router-dom";
 

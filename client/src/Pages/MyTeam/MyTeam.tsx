@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useQuery, gql } from "@apollo/client";
 
-import { FantasyTeam, Player } from "@models";
+import { FantasyTeam, Player } from "@types";
 import Button from "@mui/material/Button";
 import AddPlayer from "../PlayerList/AddPlayer";
 
