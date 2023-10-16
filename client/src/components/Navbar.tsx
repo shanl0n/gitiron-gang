@@ -1,3 +1,4 @@
+import { Link } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
 
@@ -13,8 +14,8 @@ const Navbar = () => {
   return (
   <Wrapper>
     <Options>League</Options>
-    <Options>My Team</Options>
-    <Options>Players</Options>
+    <Options><Link href="/myteam">My Team</Link></Options>
+    <Options><Link href="/players">Players</Link></Options>
   </Wrapper>)
 };
 
