@@ -24,13 +24,18 @@ const MULTIPLIERS = {
 export const statsResolvers = {
   Player: {
     gameStatsSummary: async (parent: Player, args, ctx: RequestContext, info) => {
+      if (parent.gameStatsSummary) {
+        return parent.gameStatsSummary;
+      }
+
       const stats = await ctx.dataSources.playerGameStats.find({playerId: parent.id}).toArray();
-      
       return playerStatsSummary(stats);
     },
   },
   FantasyTeam: {
-    totalPoints: async (parent, args, ctx, info) => 0 // TODO LATER
+    totalPoints: async (parent, args, ctx, info) => {
+      return parent.totalPoints || 0;
+    }
   }
 };
 

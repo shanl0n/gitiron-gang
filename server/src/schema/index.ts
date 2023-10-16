@@ -15,6 +15,7 @@ export const typeDefs = `#graphql
     id: String!
     name: String!
     players: [Player!]!
+    totalPoints: Float!
   }
 
   type FantasyGame {

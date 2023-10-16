@@ -17,6 +17,7 @@ const GET_FANTASY_GAME = gql`
   }
   fragment TeamFragment on FantasyTeam {
     name
+    totalPoints
     players {
       id
       name
@@ -58,16 +59,23 @@ const GameCentre = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   if (!data) return <p>No players found</p>;
-  
-  return (
-  <>
-    <div>{data.fantasyGame.myTeam.name}</div>
-    <PlayerTable players={data.fantasyGame.myTeam.players}/>
-    <div>{data.fantasyGame.opponentsTeam.name}</div>
-    <PlayerTable players={data.fantasyGame.opponentsTeam.players}/>
-  </>
-);
-};
 
+  const myTeam = data.fantasyGame.myTeam
+  const opponentsTeam = data.fantasyGame.opponentsTeam
+
+  return (
+    <>
+      <div>
+        {myTeam.name} - {myTeam.totalPoints}
+      </div>
+      <PlayerTable players={myTeam.players} />
+      <div>
+        {opponentsTeam.name} -{" "}
+        {opponentsTeam.totalPoints}
+      </div>
+      <PlayerTable players={opponentsTeam.players} />
+    </>
+  );
+};
 
 export default GameCentre;

@@ -1,5 +1,9 @@
 import { RequestContext } from "../context";
-import { FantasyTeamModel, PlayerGameStatsModel, PlayerModel } from "../datasource/models";
+import {
+  FantasyTeamModel,
+  PlayerGameStatsModel,
+  PlayerModel,
+} from "../datasource/models";
 import { playerStatsSummary } from "./stats";
 
 export const fantasyResolvers = {
@@ -47,15 +51,21 @@ export const fantasyResolvers = {
   },
   FantasyTeam: {
     players: async (
-      parent: FantasyTeamModel,
+      parent,
       args,
       ctx: RequestContext,
       info
     ) => {
+      // TODO: wouldn't need this if fantasy teams only existed by week
+      if (parent.players) {
+        return parent.players;
+      }
+
       const players = await ctx.dataSources.fantasyTeamPlayers
         .find({ fantasyTeamId: parent.id })
         .toArray();
-      return await ctx.dataSources.players
+
+        return await ctx.dataSources.players
         .find({
           id: {
             $in: players.map((player) => player.playerId),
@@ -105,10 +115,12 @@ const fantasyTeamForWeek = async (
     id: fantasyTeamId,
   });
 
-  const teamPlayers = await ctx.dataSources.fantasyTeamPlayers.find({
-    fantasyTeamId: fantasyTeam.id,
-    // TODO: have players be for a certain week on the fantasy team
-  }).toArray();
+  const teamPlayers = await ctx.dataSources.fantasyTeamPlayers
+    .find({
+      fantasyTeamId: fantasyTeam.id,
+      // TODO: have players be for a certain week on the fantasy team
+    })
+    .toArray();
   const playerIds = teamPlayers.map((player) => player.playerId);
 
   const gameStats = await ctx.dataSources.gameStats
@@ -118,16 +130,16 @@ const fantasyTeamForWeek = async (
         $elemMatch: {
           playerId: {
             $in: playerIds,
-          }
-        }
+          },
+        },
       },
     })
     .toArray();
 
-  const gameStatsByPlayer: {[playerId: string]: PlayerGameStatsModel[]} = {}
-  playerIds.forEach((id) => gameStatsByPlayer[id] = []);
+  const gameStatsByPlayer: { [playerId: string]: PlayerGameStatsModel[] } = {};
+  playerIds.forEach((id) => (gameStatsByPlayer[id] = []));
 
-  gameStats.forEach((game) =>{
+  gameStats.forEach((game) => {
     game.playerGameStats.forEach((stat) => {
       if (stat.playerId in gameStatsByPlayer) {
         gameStatsByPlayer[stat.playerId].push(stat);
@@ -135,20 +147,27 @@ const fantasyTeamForWeek = async (
     });
   });
 
-  const playersData = await ctx.dataSources.players.find({
-    id: {
-      $in: playerIds,
-    }
-  }).toArray();
+  const playersData = await ctx.dataSources.players
+    .find({
+      id: {
+        $in: playerIds,
+      },
+    })
+    .toArray();
 
   const playersWithSummary = playersData.map((player) => ({
     ...player,
-    gameStatsSummary: playerStatsSummary(gameStatsByPlayer[player.id])
-  }))
+    gameStatsSummary: playerStatsSummary(gameStatsByPlayer[player.id]),
+  }));
+
+  let totalPoints = 0;
+  playersWithSummary.forEach((player) => {
+    totalPoints += player.gameStatsSummary.totalPoints;
+  });
 
   return {
     ...fantasyTeam,
     players: playersWithSummary,
-    // TODO: totalPoints summarized from above
+    totalPoints,
   };
 };
