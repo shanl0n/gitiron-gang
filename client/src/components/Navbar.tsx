@@ -8,6 +8,7 @@ const Wrapper=styled.nav`
 `
 const Options=styled.div`
   color: black;
+  padding-right: 1rem;
 `
 
 const Navbar = () => {
