@@ -50,6 +50,7 @@ export interface Player {
   team_id: string;
   position: string;
   gameStatsSummary: GameStatsSummary;
+  fantasyTeam?: FantasyTeam;
 };
 
 export interface User {

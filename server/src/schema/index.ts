@@ -6,6 +6,7 @@ export const typeDefs = `#graphql
   }
 
   type FantasyTeam {
+    id: String!
     name: String!
     players: [Player!]!
   }
@@ -19,6 +20,7 @@ export const typeDefs = `#graphql
     name: String!
     position: String!
     gameStatsSummary: GameStatsSummary!
+    fantasyTeam: FantasyTeam
   }
 
   type GameStatsSummary {

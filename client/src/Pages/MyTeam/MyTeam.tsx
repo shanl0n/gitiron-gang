@@ -61,6 +61,8 @@ const MyTeam = () => {
   return (
     <>
       <Button href="/players">Add</Button>
+      <Button href="/players">Drop</Button>
+      <Button href="/players">Trade</Button>
       <TableContainer component={Paper} className="data-table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

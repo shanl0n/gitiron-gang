@@ -1,5 +1,5 @@
 import { RequestContext } from "../context";
-import { FantasyTeam } from "../models";
+import { FantasyTeam, Player } from "../models";
 
 export const fantasyResolvers = {
   Mutation: {
@@ -23,14 +23,27 @@ export const fantasyResolvers = {
       const players = await ctx.dataSources.fantasyTeamPlayers
         .find({ fantasyTeamId: parent.id })
         .toArray();
-        return await ctx.dataSources.players
+      return await ctx.dataSources.players
         .find({
           id: {
-            $in: players.map((player) => player.playerId)
-          }
-          
+            $in: players.map((player) => player.playerId),
+          },
         })
         .toArray();
+    },
+  },
+  Player: {
+    fantasyTeam: async (parent: Player, args, ctx: RequestContext, info) => {
+      return await ctx.dataSources.fantasyTeamPlayers
+        .findOne({ playerId: parent.id })
+        .then((fantasyTeamPlayer) => {
+          return ctx.dataSources.fantasyTeams.findOne({
+            id: fantasyTeamPlayer.fantasyTeamId,
+          });
+        })
+        .catch(() => {
+          return null;
+        });
     },
   },
 };

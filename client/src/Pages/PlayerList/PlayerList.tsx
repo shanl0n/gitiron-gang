@@ -19,6 +19,10 @@ const GET_PLAYERS = gql`
       id
       name
       position
+      fantasyTeam {
+        id
+        name
+      }
       gameStatsSummary {
         rushing {
           attempts
@@ -108,7 +112,7 @@ const PlayerList = ( ) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">
-                  <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />
+                  {player.fantasyTeam ? `In fantasy team ${player.fantasyTeam.name}` : <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />}
                 </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>

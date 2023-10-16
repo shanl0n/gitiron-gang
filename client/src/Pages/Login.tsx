@@ -81,7 +81,7 @@ const Login = ({ onLogin }: Props) => {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/190px-National_Football_League_logo.svg.png)",
+              "url(https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
