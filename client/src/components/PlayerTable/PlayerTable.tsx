@@ -23,7 +23,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
       component={Paper}
       className="data-table PlayerTable"
     >
-      <Table  sx={{ maxWidth: 985}} aria-label="simple table">
+      <Table  sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead style={{backgroundColor: "whitesmoke" }}>
           <TableRow sx={{height: '1px'}}>
             <TableCell colSpan={3} />
@@ -74,7 +74,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                 </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>
-                  <div>{player.position}</div>
+                  <div className="PositionColumn">{player.position}</div>
                 </TableCell>
                 <TableCell align="right">Manager</TableCell>
                 <TableCell align="right">{stats.passing.completions}</TableCell>
@@ -94,7 +94,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   {stats.receiving.touchdowns}
                 </TableCell>
                 <TableCell align="right">{stats.fumbles.fumbles}</TableCell>
-                <TableCell align="right">{stats.totalPoints}</TableCell>
+                <TableCell className="totalPoints" align="right">{stats.totalPoints}</TableCell>
               </TableRow>
             );
           })}

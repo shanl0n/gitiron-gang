@@ -16,12 +16,15 @@ const NameScoreContainerHome = styled.div`
   color: black;
   font-weight: bold;
   margin: auto;
+  margin-right: 2rem;
+  text-align: right;
 `;
 
 const NameScoreContainerAway = styled.div`
   color: black;
   font-weight: bold;
   margin: auto;
+  margin-left: 2rem;
 `;
 
 const OppoName = styled.p`
@@ -35,8 +38,13 @@ const MyTeamName = styled.p`
   font-size: 184%;
   display: block;
   margin: 0;
-  align-items: right;
+  text-align: right;
 `;
+
+const VS = styled.div`
+  font-weight: bold;
+`
+
 
 const GET_FANTASY_GAME = gql`
   query GetFantasyGame {
@@ -105,7 +113,7 @@ const GameCentre = () => {
           {myTeam.totalPoints}
           <PlayerTable players={myTeam.players} />
         </NameScoreContainerHome>
-        <div>VS</div>
+        <VS>VS</VS>
         <NameScoreContainerAway>
           <OppoName>{opponentsTeam.name} </OppoName>
           {opponentsTeam.totalPoints}
