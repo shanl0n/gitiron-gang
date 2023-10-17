@@ -1,8 +1,15 @@
 import React from "react";
 
+import styled from "styled-components";
 import { gql, useQuery } from "@apollo/client";
 import { FantasyGame } from "@types";
 import PlayerTable from "../../components/PlayerTable";
+
+const Wrapper=styled.div`
+  background-color: white;
+  color: black;
+  display: flex;
+`
 
 const GET_FANTASY_GAME = gql`
   query GetFantasyGame {
@@ -65,6 +72,7 @@ const GameCentre = () => {
 
   return (
     <>
+    <Wrapper>
       <div>
         {myTeam.name} - {myTeam.totalPoints}
       </div>
@@ -74,6 +82,7 @@ const GameCentre = () => {
         {opponentsTeam.totalPoints}
       </div>
       <PlayerTable players={opponentsTeam.players} />
+    </Wrapper>
     </>
   );
 };

@@ -14,10 +14,14 @@ interface Props {
   renderAction?: (player: Player) => React.ReactNode;
 }
 
-const PlayerTable = ({players, renderAction}: Props) => {
+const PlayerTable = ({ players, renderAction }: Props) => {
   return (
-    <TableContainer component={Paper} className="data-table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer
+      sx={{ maxWidth: 985, borderBlock: 2 }}
+      component={Paper}
+      className="data-table"
+    >
+      <Table sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell colSpan={3} />
@@ -63,7 +67,9 @@ const PlayerTable = ({players, renderAction}: Props) => {
                 key={player.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="center">{renderAction && renderAction(player)}</TableCell>
+                <TableCell align="center">
+                  {renderAction && renderAction(player)}
+                </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>
                   <div>{player.position}</div>
