@@ -19,13 +19,13 @@ interface Props {
 const PlayerTable = ({ players, renderAction }: Props) => {
   return (
     <TableContainer
-      sx={{ maxWidth: 985, borderBlock: 1}}
+      sx={{ maxWidth: 985, borderBlock: 1 }}
       component={Paper}
       className="data-table PlayerTable"
     >
-      <Table  sx={{ maxWidth: 985 }} aria-label="simple table">
-        <TableHead style={{backgroundColor: "whitesmoke" }}>
-          <TableRow sx={{height: '1px'}}>
+      <Table sx={{ maxWidth: 985 }} aria-label="simple table">
+        <TableHead>
+          <TableRow sx={{ height: "1px", backgroundColor: "whitesmoke" }}>
             <TableCell colSpan={3} />
             <TableCell colSpan={4} align="center">
               Passing
@@ -43,7 +43,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
               Fantasy
             </TableCell>
           </TableRow>
-          <TableRow style={{maxHeight: 1}}>
+          <TableRow style={{ maxHeight: 1 }}>
             <TableCell align="center">Action</TableCell>
             <TableCell align="center">Player</TableCell>
             <TableCell align="center">Manager</TableCell>
@@ -67,7 +67,12 @@ const PlayerTable = ({ players, renderAction }: Props) => {
             return (
               <TableRow
                 key={player.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{
+                  "&:last-child td, &:last-child th": {
+                    border: 0,
+                    maxHeight: "point",
+                  },
+                }}
               >
                 <TableCell align="center">
                   {renderAction && renderAction(player)}
@@ -94,7 +99,9 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   {stats.receiving.touchdowns}
                 </TableCell>
                 <TableCell align="right">{stats.fumbles.fumbles}</TableCell>
-                <TableCell className="totalPoints" align="right">{stats.totalPoints}</TableCell>
+                <TableCell className="PlayerTable-totalPoints" align="right">
+                  {stats.totalPoints}
+                </TableCell>
               </TableRow>
             );
           })}

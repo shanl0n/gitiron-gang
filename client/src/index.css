@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #f0f0f0;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -71,7 +71,7 @@ button:focus-visible {
 
 .header {
   overflow: hidden;
-  background-color: #f1f1f1;
+  background-color: #2f61a7;
   padding: 20px 10px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.24);
   margin-bottom: 1px;
@@ -79,7 +79,7 @@ button:focus-visible {
 
 .header a {
   float: left;
-  color: black;
+  color: white;
   text-align: center;
   padding: 12px;
   text-decoration: none;

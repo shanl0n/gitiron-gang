@@ -22,8 +22,8 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="">
+        GitIron Gang
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -81,13 +81,13 @@ const Login = ({ onLogin }: Props) => {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png)",
+              "url(https://i.ibb.co/rtCT4ZJ/Gitiron-Gang-logo-large-removebg-preview.png)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
-            backgroundSize: "cover",
+            backgroundSize: "",
             backgroundPosition: "center",
           }}
         />
