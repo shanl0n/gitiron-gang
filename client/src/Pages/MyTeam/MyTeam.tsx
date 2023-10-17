@@ -7,6 +7,12 @@ import Button from "@mui/material/Button";
 import PlayerTable from "../../components/PlayerTable";
 import DropPlayer from "./DropPlayer";
 
+const Container = styled.div`
+  width: 62rem;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 const GET_FANTASY_TEAM = gql`
   query GetFantasyTeam {
     fantasyTeam {
@@ -75,10 +81,12 @@ const MyTeam = () => {
       <Button href="/players">Add</Button>
       <Button onClick={() => setDropping(true)}>Drop</Button>
       <Button href="/players">Trade</Button>
-      <PlayerTable
-        players={data.fantasyTeam.players}
-        renderAction={renderAction}
-      />
+      <Container>
+        <PlayerTable
+          players={data.fantasyTeam.players}
+          renderAction={renderAction}
+        />
+      </Container>
     </>
   );
 };

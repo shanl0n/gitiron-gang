@@ -5,6 +5,8 @@ import styled from "styled-components";
 const Wrapper=styled.nav`
   background-color: white;
   display: flex;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.24);
+  margin-bottom: 4px;
 `
 const Options=styled.div`
   color: black;

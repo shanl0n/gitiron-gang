@@ -17,11 +17,11 @@ interface Props {
 const PlayerTable = ({ players, renderAction }: Props) => {
   return (
     <TableContainer
-      sx={{ maxWidth: 985, borderBlock: 2 }}
+      sx={{ maxWidth: 985, borderBlock: 2}}
       component={Paper}
       className="data-table"
     >
-      <Table sx={{ maxWidth: 985 }} aria-label="simple table">
+      <Table  sx={{ maxWidth: 985}} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell colSpan={3} />
