@@ -9,17 +9,23 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Player } from "@types";
 
+import "./style.css";
+
 interface Props {
   players: Player[];
   renderAction?: (player: Player) => React.ReactNode;
 }
 
-const PlayerTable = ({players, renderAction}: Props) => {
+const PlayerTable = ({ players, renderAction }: Props) => {
   return (
-    <TableContainer component={Paper} className="data-table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer
+      sx={{ maxWidth: 985, borderBlock: 1 }}
+      component={Paper}
+      className="data-table PlayerTable"
+    >
+      <Table sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ height: "1px", backgroundColor: "whitesmoke" }}>
             <TableCell colSpan={3} />
             <TableCell colSpan={4} align="center">
               Passing
@@ -37,7 +43,7 @@ const PlayerTable = ({players, renderAction}: Props) => {
               Fantasy
             </TableCell>
           </TableRow>
-          <TableRow>
+          <TableRow style={{ maxHeight: 1 }}>
             <TableCell align="center">Action</TableCell>
             <TableCell align="center">Player</TableCell>
             <TableCell align="center">Manager</TableCell>
@@ -61,12 +67,19 @@ const PlayerTable = ({players, renderAction}: Props) => {
             return (
               <TableRow
                 key={player.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{
+                  "&:last-child td, &:last-child th": {
+                    border: 0,
+                    maxHeight: "point",
+                  },
+                }}
               >
-                <TableCell align="center">{renderAction && renderAction(player)}</TableCell>
+                <TableCell align="center">
+                  {renderAction && renderAction(player)}
+                </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>
-                  <div>{player.position}</div>
+                  <div className="PositionColumn">{player.position}</div>
                 </TableCell>
                 <TableCell align="right">Manager</TableCell>
                 <TableCell align="right">{stats.passing.completions}</TableCell>
@@ -86,7 +99,9 @@ const PlayerTable = ({players, renderAction}: Props) => {
                   {stats.receiving.touchdowns}
                 </TableCell>
                 <TableCell align="right">{stats.fumbles.fumbles}</TableCell>
-                <TableCell align="right">{stats.totalPoints}</TableCell>
+                <TableCell className="PlayerTable-totalPoints" align="right">
+                  {stats.totalPoints}
+                </TableCell>
               </TableRow>
             );
           })}

@@ -1,0 +1,19 @@
+.PlayerTable th {
+  padding: 1px;
+  margin: 0px;
+}
+
+.PlayerTable td {
+  padding: 3px 15px;
+}
+
+.PlayerTable-totalPoints {
+  background-color: #F1F6F9;
+}
+
+.PlayerTable {
+  /* outline: 1px solid rgba(0, 0, 0, 0.381); */
+  /* box-shadow: 0px 2px 2px black; */
+}
+
+
