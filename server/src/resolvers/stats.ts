@@ -1,5 +1,5 @@
 import { RequestContext } from "../context";
-import { PlayerGameStatsModel } from "../datasource/models";
+import { PlayerGameStatsModel, PlayerModel } from "../datasource/models";
 import { GameStatsSummary, PassingStats, Player, ReceivingStats, RushingStats } from "../schema/types";
 
 const MULTIPLIERS = {
@@ -24,19 +24,16 @@ const MULTIPLIERS = {
 export const statsResolvers = {
   Player: {
     gameStatsSummary: async (parent: Player, args, ctx: RequestContext, info) => {
+      // for fantasy teams, they have to fetch player game stats at the team
+      // resolver level so that it can calculate the total points from that
       if (parent.gameStatsSummary) {
         return parent.gameStatsSummary;
       }
-
+      
       const stats = await ctx.dataSources.playerGameStats.find({playerId: parent.id}).toArray();
       return playerStatsSummary(stats);
     },
   },
-  FantasyTeam: {
-    totalPoints: async (parent, args, ctx, info) => {
-      return parent.totalPoints || 0;
-    }
-  }
 };
 
 export const playerStatsSummary = (stats: PlayerGameStatsModel[]) => {
@@ -111,4 +108,50 @@ const sumPassing = (stats: PassingStats): number => {
     stats.interceptions * MULTIPLIERS.PASSING.INTERCEPTIONS +
     stats.completions * MULTIPLIERS.PASSING.COMPLETIONS
   );
+};
+
+
+export const teamStatsForWeek = async (
+  ctx: RequestContext,
+  players: PlayerModel[],
+  weekId: string
+) => {
+  const gameStats = await ctx.dataSources.gameStats
+    .find({
+      "summary.week.id": weekId,
+      playerGameStats: {
+        $elemMatch: {
+          playerId: {
+            $in: players.map((player) => player.id),
+          },
+        },
+      },
+    })
+    .toArray();
+
+  const gameStatsByPlayer: { [playerId: string]: PlayerGameStatsModel[] } = {};
+  players.forEach((player) => (gameStatsByPlayer[player.id] = []));
+
+  gameStats.forEach((game) => {
+    game.playerGameStats.forEach((stat) => {
+      if (stat.playerId in gameStatsByPlayer) {
+        gameStatsByPlayer[stat.playerId].push(stat);
+      }
+    });
+  });
+
+  const playersWithSummary = players.map((player) => ({
+    ...player,
+    gameStatsSummary: playerStatsSummary(gameStatsByPlayer[player.id]),
+  }));
+
+  let totalPoints = 0;
+  playersWithSummary.forEach((player) => {
+    totalPoints += player.gameStatsSummary.totalPoints;
+  });
+
+  return {
+    players: playersWithSummary,
+    totalPoints,
+  };
 };

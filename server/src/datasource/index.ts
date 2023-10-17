@@ -1,6 +1,6 @@
 import { Db, MongoClient } from "mongodb";
 import { Collection } from "mongoose";
-import { FantasyGameModel, FantasyTeamModel, FantasyTeamPlayerModel, GameStatsModel, PlayerGameStatsModel, PlayerModel, UserModel } from "./models";
+import { FantasyGameModel, FantasyTeamModel, FantasyTeamPlayerModel, FantasyTeamRosterModel, GameStatsModel, PlayerGameStatsModel, PlayerModel, UserModel } from "./models";
 
 export interface Datasource {
   users: Collection<UserModel>;
@@ -11,8 +11,8 @@ export interface Datasource {
   playerGameStats: Collection<PlayerGameStatsModel>;
   fantasyTeams: Collection<FantasyTeamModel>;
   fantasyTeamPlayers: Collection<FantasyTeamPlayerModel>;
+  fantasyTeamRoster: Collection<FantasyTeamRosterModel>;
   fantasyGames: Collection<FantasyGameModel>;
-  // fantasyGameWeekTeam
 }
 
 export const setupDatasource = async (client: MongoClient): Promise<Datasource> => {
@@ -26,9 +26,27 @@ export const setupDatasource = async (client: MongoClient): Promise<Datasource> 
     playerGameStats: db.collection("player_game_stats"),
     fantasyTeams: db.collection("fantasy_teams"),
     fantasyTeamPlayers: db.collection("fantasy_team_players"),
+    fantasyTeamRoster: await createFantasyTeamRosterView(db),
     fantasyGames: db.collection("fantasy_games"),
   } as Datasource;
 };
+
+const createFantasyTeamRosterView = async (db: Db) => {
+  await db.dropCollection("fantasy_team_rosters");
+  return await db.createCollection<FantasyTeamRosterModel>("fantasy_team_rosters", {
+    viewOn: "fantasy_teams",
+    pipeline: [
+      {
+        $lookup: {
+          from: "fantasy_team_players",
+          localField: "id",
+          foreignField: "fantasyTeamId",
+          as: "players",
+        }
+      }
+    ]
+  });
+}
 
 const createGameStatsView = async (db: Db) => {
   await db.dropCollection("game_stats");

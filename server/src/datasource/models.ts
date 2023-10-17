@@ -43,11 +43,16 @@ export interface UserModel {
 export interface FantasyTeamModel {
   id: string;
   name: string;
+  weekId: string;
 }
 
 export interface FantasyTeamPlayerModel {
   playerId: string;
   fantasyTeamId: string;
+}
+
+export type FantasyTeamRosterModel = FantasyTeamModel & {
+  players: FantasyTeamPlayerModel[];
 }
 
 export interface FantasyGameModel {

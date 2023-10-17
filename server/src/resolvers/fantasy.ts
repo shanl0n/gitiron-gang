@@ -4,38 +4,57 @@ import {
   PlayerGameStatsModel,
   PlayerModel,
 } from "../datasource/models";
-import { playerStatsSummary } from "./stats";
+import { playerStatsSummary, teamStatsForWeek } from "./stats";
 
 export const fantasyResolvers = {
   Mutation: {
     addPlayer: async (parent, args, ctx: RequestContext, info) => {
+      const fantasyTeam = await currentFantasyTeam(ctx);
       const response = await ctx.dataSources.fantasyTeamPlayers.insertOne({
         playerId: args.id as string,
-        fantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
+        fantasyTeamId: fantasyTeam.id,
       });
       return response.acknowledged;
     },
     dropPlayer: async (parent, args, ctx: RequestContext, info) => {
+      const fantasyTeam = await currentFantasyTeam(ctx);
       const response = await ctx.dataSources.fantasyTeamPlayers.deleteOne({
         playerId: args.id as string,
-        fantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
+        fantasyTeamId: fantasyTeam.id,
       });
       return response.acknowledged;
     },
   },
   Query: {
     fantasyTeam: async (parent, args, ctx: RequestContext, info) => {
-      return await ctx.dataSources.fantasyTeams.findOne({
-        id: ctx.jwtPayload!.fantasyTeamId,
-      });
+      const fantasyTeam = await currentFantasyTeam(ctx);
+      const teamPlayers = await ctx.dataSources.fantasyTeamPlayers
+        .find({ fantasyTeamId: fantasyTeam.id })
+        .toArray();
+
+      const players = await ctx.dataSources.players
+        .find({
+          id: {
+            $in: teamPlayers.map((player) => player.playerId),
+          },
+        })
+        .toArray();
+
+      const gameStats = await teamStatsForWeek(ctx, players, fantasyTeam.weekId);
+
+      return {
+        ...fantasyTeam,
+        players: gameStats.players,
+        totalPoints: gameStats.totalPoints,
+      };
     },
     fantasyGame: async (parent, args, ctx: RequestContext, info) => {
-      const myTeamId = ctx.jwtPayload!.fantasyTeamId;
-      const weekId = currentWeekId();
-
+      const fantasyTeam = await currentFantasyTeam(ctx);
+      const myTeamId = fantasyTeam.id;
+      
       const fantasyGame = await ctx.dataSources.fantasyGames.findOne({
         fantasyTeamIds: myTeamId,
-        weekId,
+        weekId: fantasyTeam.weekId,
       });
 
       const opponentsTeamId = fantasyGame.fantasyTeamIds.find(
@@ -45,33 +64,8 @@ export const fantasyResolvers = {
       return {
         myTeamId,
         opponentsTeamId,
-        weekId,
+        weekId: fantasyTeam.weekId,
       };
-    },
-  },
-  FantasyTeam: {
-    players: async (
-      parent,
-      args,
-      ctx: RequestContext,
-      info
-    ) => {
-      // TODO: wouldn't need this if fantasy teams only existed by week
-      if (parent.players) {
-        return parent.players;
-      }
-
-      const players = await ctx.dataSources.fantasyTeamPlayers
-        .find({ fantasyTeamId: parent.id })
-        .toArray();
-
-        return await ctx.dataSources.players
-        .find({
-          id: {
-            $in: players.map((player) => player.playerId),
-          },
-        })
-        .toArray();
     },
   },
   FantasyGame: {
@@ -87,16 +81,14 @@ export const fantasyResolvers = {
       ctx: RequestContext,
       info
     ) => {
-      return await ctx.dataSources.fantasyTeamPlayers
-        .findOne({ playerId: parent.id })
-        .then((fantasyTeamPlayer) => {
-          return ctx.dataSources.fantasyTeams.findOne({
-            id: fantasyTeamPlayer.fantasyTeamId,
-          });
-        })
-        .catch(() => {
-          return null;
-        });
+      return await ctx.dataSources.fantasyTeamRoster.findOne({
+        weekId: currentWeekId(),
+        players: {
+          $elemMatch: {
+            playerId: parent.id,
+          },
+        },
+      }).catch(() => null);
     },
   },
 };
@@ -113,61 +105,35 @@ const fantasyTeamForWeek = async (
 ) => {
   const fantasyTeam = await ctx.dataSources.fantasyTeams.findOne({
     id: fantasyTeamId,
+    weekId: weekId,
   });
 
   const teamPlayers = await ctx.dataSources.fantasyTeamPlayers
     .find({
       fantasyTeamId: fantasyTeam.id,
-      // TODO: have players be for a certain week on the fantasy team
-    })
-    .toArray();
-  const playerIds = teamPlayers.map((player) => player.playerId);
-
-  const gameStats = await ctx.dataSources.gameStats
-    .find({
-      "summary.week.id": weekId,
-      playerGameStats: {
-        $elemMatch: {
-          playerId: {
-            $in: playerIds,
-          },
-        },
-      },
     })
     .toArray();
 
-  const gameStatsByPlayer: { [playerId: string]: PlayerGameStatsModel[] } = {};
-  playerIds.forEach((id) => (gameStatsByPlayer[id] = []));
-
-  gameStats.forEach((game) => {
-    game.playerGameStats.forEach((stat) => {
-      if (stat.playerId in gameStatsByPlayer) {
-        gameStatsByPlayer[stat.playerId].push(stat);
-      }
-    });
-  });
-
-  const playersData = await ctx.dataSources.players
+  const players = await ctx.dataSources.players
     .find({
       id: {
-        $in: playerIds,
+        $in: teamPlayers.map((player) => player.playerId),
       },
     })
     .toArray();
 
-  const playersWithSummary = playersData.map((player) => ({
-    ...player,
-    gameStatsSummary: playerStatsSummary(gameStatsByPlayer[player.id]),
-  }));
-
-  let totalPoints = 0;
-  playersWithSummary.forEach((player) => {
-    totalPoints += player.gameStatsSummary.totalPoints;
-  });
-
+  const gameStats = await teamStatsForWeek(ctx, players, weekId);
+  
   return {
     ...fantasyTeam,
-    players: playersWithSummary,
-    totalPoints,
+    players: gameStats.players,
+    totalPoints: gameStats.totalPoints,
   };
 };
+
+const currentFantasyTeam = async (ctx: RequestContext): Promise<FantasyTeamModel> => {
+  return await ctx.dataSources.fantasyTeams.findOne({
+    weekId: currentWeekId(),
+    id: ctx.jwtPayload!.fantasyTeamId,
+  });
+}
