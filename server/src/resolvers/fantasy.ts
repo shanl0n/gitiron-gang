@@ -1,10 +1,9 @@
 import { RequestContext } from "../context";
 import {
   FantasyTeamModel,
-  PlayerGameStatsModel,
   PlayerModel,
 } from "../datasource/models";
-import { playerStatsSummary, teamStatsForWeek } from "./stats";
+import { teamStatsForWeek } from "./stats";
 
 export const fantasyResolvers = {
   Mutation: {
