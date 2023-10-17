@@ -5,11 +5,38 @@ import { gql, useQuery } from "@apollo/client";
 import { FantasyGame } from "@types";
 import PlayerTable from "../../components/PlayerTable";
 
-const Wrapper=styled.div`
+const Wrapper = styled.div`
   background-color: white;
   color: black;
   display: flex;
-`
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+`;
+const NameScoreContainerHome = styled.div`
+  color: black;
+  font-weight: bold;
+  margin: auto;
+`;
+
+const NameScoreContainerAway = styled.div`
+  color: black;
+  font-weight: bold;
+  margin: auto;
+`;
+
+const OppoName = styled.p`
+  color: #8f0000;
+  font-size: 184%;
+  margin: 0;
+`;
+
+const MyTeamName = styled.p`
+  color: #004792;
+  font-size: 184%;
+  display: block;
+  margin: 0;
+  align-items: right;
+`;
 
 const GET_FANTASY_GAME = gql`
   query GetFantasyGame {
@@ -67,22 +94,24 @@ const GameCentre = () => {
   if (error) return <p>Error : {error.message}</p>;
   if (!data) return <p>No players found</p>;
 
-  const myTeam = data.fantasyGame.myTeam
-  const opponentsTeam = data.fantasyGame.opponentsTeam
+  const myTeam = data.fantasyGame.myTeam;
+  const opponentsTeam = data.fantasyGame.opponentsTeam;
 
   return (
     <>
-    <Wrapper>
-      <div>
-        {myTeam.name} - {myTeam.totalPoints}
-      </div>
-      <PlayerTable players={myTeam.players} />
-      <div>
-        {opponentsTeam.name} -{" "}
-        {opponentsTeam.totalPoints}
-      </div>
-      <PlayerTable players={opponentsTeam.players} />
-    </Wrapper>
+      <Wrapper>
+        <NameScoreContainerHome>
+          <MyTeamName>{myTeam.name} </MyTeamName>
+          {myTeam.totalPoints}
+          <PlayerTable players={myTeam.players} />
+        </NameScoreContainerHome>
+        <div>VS</div>
+        <NameScoreContainerAway>
+          <OppoName>{opponentsTeam.name} </OppoName>
+          {opponentsTeam.totalPoints}
+          <PlayerTable players={opponentsTeam.players} />
+        </NameScoreContainerAway>
+      </Wrapper>
     </>
   );
 };

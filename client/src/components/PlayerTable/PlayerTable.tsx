@@ -9,6 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Player } from "@types";
 
+import "./style.css";
+
 interface Props {
   players: Player[];
   renderAction?: (player: Player) => React.ReactNode;
@@ -17,13 +19,13 @@ interface Props {
 const PlayerTable = ({ players, renderAction }: Props) => {
   return (
     <TableContainer
-      sx={{ maxWidth: 985, borderBlock: 2}}
+      sx={{ maxWidth: 985, borderBlock: 1}}
       component={Paper}
-      className="data-table"
+      className="data-table PlayerTable"
     >
       <Table  sx={{ maxWidth: 985}} aria-label="simple table">
-        <TableHead>
-          <TableRow>
+        <TableHead style={{backgroundColor: "whitesmoke" }}>
+          <TableRow sx={{height: '1px'}}>
             <TableCell colSpan={3} />
             <TableCell colSpan={4} align="center">
               Passing
@@ -41,7 +43,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
               Fantasy
             </TableCell>
           </TableRow>
-          <TableRow>
+          <TableRow style={{maxHeight: 1}}>
             <TableCell align="center">Action</TableCell>
             <TableCell align="center">Player</TableCell>
             <TableCell align="center">Manager</TableCell>
