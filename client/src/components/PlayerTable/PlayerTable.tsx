@@ -107,8 +107,6 @@ const PlayerTable = ({ players, renderAction }: Props) => {
           })}
         </TableBody>
       </Table>
-      <div>Previous</div>
-      <div>Next</div>
     </TableContainer>
   );
 };
