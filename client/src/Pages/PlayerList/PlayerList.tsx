@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useQuery, gql } from "@apollo/client";
 import { Player, PlayerConnection } from "@types";
 import AddPlayer from "./AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
 import styled from "styled-components";
-import { Button } from "@mui/material";
+import { Button, Pagination, TablePagination } from "@mui/material";
 
 const Container = styled.div`
   width: 985px;
@@ -15,52 +15,48 @@ const Container = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-display: flex;
-justify-content: space-between;
-padding-bottom: 1rem;
-`
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+`;
 
 const GET_PLAYERS = gql`
   query GetPlayers($input: PlayersInput) {
     players(input: $input) {
       pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
+        currentPage
+        pageCount
+        itemCount
       }
-      edges {
-        cursor
-        node {
+      nodes {
+        id
+        name
+        position
+        fantasyTeam {
           id
           name
-          position
-          fantasyTeam {
-            id
-            name
+        }
+        gameStatsSummary {
+          rushing {
+            attempts
+            touchdowns
+            yards
           }
-          gameStatsSummary {
-            rushing {
-              attempts
-              touchdowns
-              yards
-            }
-            receiving {
-              receptions
-              yards
-              touchdowns
-            }
-            passing {
-              completions
-              yards
-              touchdowns
-              interceptions
-            }
-            fumbles {
-              fumbles
-            }
-            totalPoints
+          receiving {
+            receptions
+            yards
+            touchdowns
           }
+          passing {
+            completions
+            yards
+            touchdowns
+            interceptions
+          }
+          fumbles {
+            fumbles
+          }
+          totalPoints
         }
       }
     }
@@ -72,32 +68,30 @@ interface GetPlayersData {
 }
 
 const PlayerList = () => {
+  const { loading, error, data, refetch } =
+    useQuery<GetPlayersData>(GET_PLAYERS);
+  const [pageSize, setPageSize] = useState(25);
 
-  const { loading, error, data, refetch } = useQuery<GetPlayersData>(GET_PLAYERS);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   if (!data) return <p>No players found</p>;
-  console.log(`---start: ${data.players.pageInfo.startCursor}`)
-  console.log(`---end: ${data.players.pageInfo.endCursor}`)
+
+  const pageInfo = data.players.pageInfo;
 
   const handleNextPage = () => {
-    if (data.players.pageInfo.hasNextPage) {
-      refetch({
-        input: {
-          afterCursor: data.players.pageInfo.endCursor,
-        },
-      });
-    }
+    refetch({
+      input: {
+        page: pageInfo.currentPage + 1,
+      },
+    });
   };
-  
+
   const handlePreviousPage = () => {
-    if (data.players.pageInfo.hasPreviousPage) {
-      refetch({
-        input: {
-          beforeCursor: data.players.pageInfo.startCursor,
-        },
-      });
-    }
+    refetch({
+      input: {
+        page: pageInfo.currentPage - 1,
+      },
+    });
   };
 
   const handlePlayerAdded = () => {
@@ -113,20 +107,54 @@ const PlayerList = () => {
     );
   };
 
+  // todo: what type is event
+  const handleRowsPerPageChange = (event: any) => {
+    console.log("EVENT");
+    event?.preventDefault();
+    const newPageSize = event.target.value;
+    setPageSize(newPageSize);
+    refetch({
+      input: {
+        pageSize: newPageSize,
+        page: 1,
+      },
+    });
+  };
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    page: number
+  ) => {
+    event?.preventDefault();
+    console.log(`change page to: ${page}`);
+
+    refetch({
+      input: {
+        page,
+        pageSize: pageSize,
+      },
+    });
+  };
+
+  const pagination = (
+    <div align="right">
+      <TablePagination
+        count={pageInfo.itemCount}
+        page={pageInfo.currentPage}
+        onPageChange={handleChangePage}
+        rowsPerPage={pageSize}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
+    </div>
+  );
+
+  // const pagination = <Pagination count={pageInfo.pageCount} page={pageInfo.currentPage} />
+
   return (
     <Container>
-      <ButtonContainer>
-      <button onClick={handlePreviousPage} disabled={!data.players.pageInfo.hasPreviousPage}>
-        Previous Page
-      </button>
-      <button onClick={handleNextPage} disabled={!data.players.pageInfo.hasNextPage}>
-        Next Page
-      </button>
-      </ButtonContainer>
-      <PlayerTable
-        players={data.players.edges.map((edge) => edge.node)}
-        renderAction={renderAction}
-      />
+      {pagination}
+      <PlayerTable players={data.players.nodes} renderAction={renderAction} />
+      {pagination}
     </Container>
   );
 };

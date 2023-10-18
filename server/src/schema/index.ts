@@ -6,10 +6,8 @@ export const typeDefs = `#graphql
   }
 
   input PlayersInput {
-    first: Int
-    last: Int
-    afterCursor: String
-    beforeCursor: String
+    page: Int
+    pageSize: Int
   }
 
   type Mutation {
@@ -30,34 +28,22 @@ export const typeDefs = `#graphql
   }
 
   type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+    itemCount: Int!
+    pageCount: Int!
+    currentPage: Int!
   }
 
   interface Connection {
     pageInfo: PageInfo!
-    edges: [Edge!]!
+    nodes: [Node!]!
   }
-
-  interface Edge {
-    cursor: String!
-    node: Node!
-  }
-
   interface Node {
     id: ID!
   }
 
   type PlayerConnection implements Connection {
     pageInfo: PageInfo!
-    edges: [PlayerEdge!]!
-  }
-
-  type PlayerEdge implements Edge {
-    cursor: String!
-    node: Player!
+    nodes: [Player!]!
   }
 
   type Player implements Node {
