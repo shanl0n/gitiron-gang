@@ -1,6 +1,6 @@
 import { Db, MongoClient } from "mongodb";
 import { Collection } from "mongoose";
-import { FantasyGameModel, FantasyTeamModel, FantasyTeamPlayerModel, GameStatsModel, PlayerGameStatsModel, PlayerModel, UserModel } from "./models";
+import { FantasyGameModel, FantasyTeamModel, FantasyTeamPlayerModel, GameStatsModel, PlayerGameStatsModel, PlayerModel, PlayerTradeModel, UserModel } from "./models";
 
 export interface Datasource {
   users: Collection<UserModel>;
@@ -12,6 +12,7 @@ export interface Datasource {
   fantasyTeams: Collection<FantasyTeamModel>;
   fantasyTeamPlayers: Collection<FantasyTeamPlayerModel>;
   fantasyGames: Collection<FantasyGameModel>;
+  playerTrades: Collection<PlayerTradeModel>;
   // fantasyGameWeekTeam
 }
 
@@ -27,6 +28,7 @@ export const setupDatasource = async (client: MongoClient): Promise<Datasource> 
     fantasyTeams: db.collection("fantasy_teams"),
     fantasyTeamPlayers: db.collection("fantasy_team_players"),
     fantasyGames: db.collection("fantasy_games"),
+    playerTrades: db.collection("player_trades"),
   } as Datasource;
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton, Radio } from "@mui/material";
 import { useMutation, gql, useQuery } from "@apollo/client";
@@ -64,6 +64,7 @@ const TradePlayer = ({ buyPlayerId, onTrade}: Props) => {
 
   const [tradePlayer] = useMutation(TRADE_PLAYER);
   const handleTradePlayer = async () => {
+    setShowPlayerSelect(false);
     const resp = await tradePlayer({
       variables: {
         buyPlayerId, sellPlayerId
@@ -92,10 +93,10 @@ const TradePlayer = ({ buyPlayerId, onTrade}: Props) => {
   
     return <PlayerTable players={data.fantasyTeam.players} renderAction={renderPlayerSelect}/>
   };
+
   return (
-    <IconButton color="warning" onClick={() => setShowPlayerSelect(true)}>
-      {showPlayerSelect && (
-        <ConfirmationDialog
+    <>
+    <ConfirmationDialog
           open={showPlayerSelect}
           title="Trade Player"
           confirmText="Trade"
@@ -103,9 +104,10 @@ const TradePlayer = ({ buyPlayerId, onTrade}: Props) => {
           onConfirm={handleTradePlayer}
           content={renderPlayerSelectContent()}
         />
-      )}
+    <IconButton color="warning" onClick={() => setShowPlayerSelect(true)}>
       <SwapHorizontalCircle />
     </IconButton>
+    </>
   );
 };
 

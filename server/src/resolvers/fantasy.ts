@@ -1,8 +1,9 @@
+import { ApolloError } from "apollo-server-express";
 import { RequestContext } from "../context";
 import {
-  FantasyTeamModel,
   PlayerGameStatsModel,
   PlayerModel,
+  TradeStatus,
 } from "../datasource/models";
 import { playerStatsSummary } from "./stats";
 
@@ -23,15 +24,30 @@ export const fantasyResolvers = {
       return response.acknowledged;
     },
     tradePlayer: async (parent, args, ctx: RequestContext, info) => {
-      // TODO: verify user owns the sell player
-      // TODO: find current fantasy team for each player
-      // save as
-      // {
-      //   sellPlayerId: args.sellPlayerId,
-      //   buyPlayerId: args.buyPlayerId,
-      //   sellFantasyTeamId: "TODO current fantasy team for sell",
-      //   buyFantasyTeamId: "TODO current fantasy team for buy",
-      // };
+      const sellerTeamPlayer = await ctx.dataSources.fantasyTeamPlayers.findOne({
+        playerId: args.sellPlayerId,
+      })
+
+      const buyerTeamPlayer = await ctx.dataSources.fantasyTeamPlayers.findOne({
+        playerId: args.buyPlayerId
+      });
+
+      if (sellerTeamPlayer.fantasyTeamId !== ctx.jwtPayload!.fantasyTeamId) {
+        throw new ApolloError("Cannot trade player you do not manage", "BAD_USER_INPUT");
+      }
+      if (buyerTeamPlayer.fantasyTeamId === ctx.jwtPayload!.fantasyTeamId) {
+        throw new ApolloError("Already managing player", "BAD_USER_INPUT");
+      }
+
+      const trade = await ctx.dataSources.playerTrades.insertOne({
+        sellPlayerId: sellerTeamPlayer.playerId,
+        sellFantasyTeamId: sellerTeamPlayer.fantasyTeamId,
+        buyPlayerId: buyerTeamPlayer.playerId,
+        buyFantasyTeamId: buyerTeamPlayer.fantasyTeamId,
+        status: TradeStatus.Pending
+      });
+
+      return trade.acknowledged;
     }
   },
   Query: {

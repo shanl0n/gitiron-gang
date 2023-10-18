@@ -56,3 +56,16 @@ export interface FantasyGameModel {
   weekId: string;
   fantasyTeamIds: string[];
 }
+
+export enum TradeStatus {
+  Pending = "pending",
+  Accepted = "accepted",
+  Rejected = "rejected"
+}
+export interface PlayerTradeModel {
+  buyPlayerId: string;
+  buyFantasyTeamId: string;
+  sellPlayerId: string;
+  sellFantasyTeamId: string;
+  status: TradeStatus;
+}
