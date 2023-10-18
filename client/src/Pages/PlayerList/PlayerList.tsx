@@ -11,11 +11,11 @@ const Container = styled.div`
   margin-left: auto;
   margin-right: auto;
   padding-top: 3rem;
-`
+`;
 
 const GET_PLAYERS = gql`
-  query GetPlayers {
-    players {
+  query GetPlayers($input: PlayersInput) {
+    players(input: $input) {
       pageInfo {
         hasPreviousPage
         hasNextPage
@@ -55,8 +55,8 @@ const GET_PLAYERS = gql`
             totalPoints
           }
         }
-        }
       }
+    }
   }
 `;
 
@@ -65,10 +65,33 @@ interface GetPlayersData {
 }
 
 const PlayerList = () => {
-  const { loading, error, data } = useQuery<GetPlayersData>(GET_PLAYERS);
+
+  const { loading, error, data, refetch } = useQuery<GetPlayersData>(GET_PLAYERS);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   if (!data) return <p>No players found</p>;
+  console.log(`---start: ${data.players.pageInfo.startCursor}`)
+  console.log(`---end: ${data.players.pageInfo.endCursor}`)
+
+  const handleNextPage = () => {
+    if (data.players.pageInfo.hasNextPage) {
+      refetch({
+        input: {
+          afterCursor: data.players.pageInfo.endCursor,
+        },
+      });
+    }
+  };
+  
+  const handlePreviousPage = () => {
+    if (data.players.pageInfo.hasPreviousPage) {
+      refetch({
+        input: {
+          beforeCursor: data.players.pageInfo.startCursor,
+        },
+      });
+    }
+  };
 
   const handlePlayerAdded = () => {
     console.log("redirect");
@@ -83,8 +106,19 @@ const PlayerList = () => {
     );
   };
 
-  
-
-  return <Container><PlayerTable players={data.players.edges.map((edge) => edge.node)} renderAction={renderAction} /></Container>;
+  return (
+    <Container>
+      <button onClick={handlePreviousPage} disabled={!data.players.pageInfo.hasPreviousPage}>
+        Previous Page
+      </button>
+      <button onClick={handleNextPage} disabled={!data.players.pageInfo.hasNextPage}>
+        Next Page
+      </button>
+      <PlayerTable
+        players={data.players.edges.map((edge) => edge.node)}
+        renderAction={renderAction}
+      />
+    </Container>
+  );
 };
 export default PlayerList;

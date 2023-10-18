@@ -35,21 +35,15 @@ export const paginationQuery = async <T extends Node>(collection: Collection<T>,
   if (input) validatePaginationInput(input);
 
   let limit = 25;
-  let reverseOrder = false;
 
   if (input?.first) limit = input.first;
   if (input?.last) limit = input.last;
-
-  if (input?.last || input?.beforeCursor) {
-    reverseOrder = true;
-  }
 
   const page = await MongoPaging.find(collection, {
     limit,
     query,
     next: input?.afterCursor,
     previous: input?.beforeCursor,
-    sortAscending: reverseOrder
   }) as MongoPage<T>;
 
   const edges = page.results.map((item) => ({
