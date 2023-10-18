@@ -26,23 +26,14 @@ const PlayerTable = ({ players, renderAction }: Props) => {
       <Table sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead>
           <TableRow sx={{ height: "1px" }}>
-            <TableCell colSpan={3} className="Primary"/>
-            <TableCell className="Primary"
-              colSpan={4}
-              align="center"
-            >
+            <TableCell colSpan={3} className="Primary" />
+            <TableCell className="Primary" colSpan={4} align="center">
               Passing
             </TableCell>
-            <TableCell className="Primary"
-              colSpan={3}
-              align="center"
-            >
+            <TableCell className="Primary" colSpan={3} align="center">
               Rushing
             </TableCell>
-            <TableCell className="Primary"
-              colSpan={3}
-              align="center"
-            >
+            <TableCell className="Primary" colSpan={3} align="center">
               Receiving
             </TableCell>
             <TableCell className="Primary" colSpan={1} align="center">
@@ -53,9 +44,15 @@ const PlayerTable = ({ players, renderAction }: Props) => {
             </TableCell>
           </TableRow>
           <TableRow style={{ maxHeight: 1 }}>
-            <TableCell className="Primary" align="center">Action</TableCell>
-            <TableCell className="Primary" align="center">Player</TableCell>
-            <TableCell className="Primary" align="center">Manager</TableCell>
+            <TableCell className="Primary" align="center">
+              Action
+            </TableCell>
+            <TableCell className="Primary" align="center">
+              Player
+            </TableCell>
+            <TableCell className="Primary" align="center">
+              Manager
+            </TableCell>
             <TableCell className="Secondary" align="center">
               Comp
             </TableCell>
@@ -107,7 +104,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   },
                 }}
               >
-                <TableCell  align="center">
+                <TableCell align="center">
                   {renderAction && renderAction(player)}
                 </TableCell>
                 <TableCell align="right">
@@ -115,24 +112,44 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   <div className="PositionName">{player.position}</div>
                 </TableCell>
                 <TableCell align="right">Manager</TableCell>
-                <TableCell align="right">{renderStat(stats.passing.completions)}</TableCell>
-                <TableCell align="right">{renderStat(stats.passing.yards)}</TableCell>
-                <TableCell align="right">{renderStat(stats.passing.touchdowns)}</TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.passing.completions)}
+                </TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.passing.yards)}
+                </TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.passing.touchdowns)}
+                </TableCell>
                 <TableCell align="right">
                   {renderStat(stats.passing.interceptions)}
                 </TableCell>
-                <TableCell align="right">{renderStat(stats.rushing.attempts)}</TableCell>
-                <TableCell align="right">{renderStat(stats.rushing.yards)}</TableCell>
-                <TableCell align="right">{renderStat(stats.rushing.touchdowns)}</TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.rushing.attempts)}
+                </TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.rushing.yards)}
+                </TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.rushing.touchdowns)}
+                </TableCell>
                 <TableCell align="right">
                   {renderStat(stats.receiving.receptions)}
                 </TableCell>
-                <TableCell align="right">{renderStat(stats.receiving.yards)}</TableCell>
+                <TableCell align="right">
+                  {renderStat(stats.receiving.yards)}
+                </TableCell>
                 <TableCell align="right">
                   {renderStat(stats.receiving.touchdowns)}
                 </TableCell>
-                <TableCell align="right">{renderStat(stats.fumbles.fumbles)}</TableCell>
-                <TableCell className="PlayerTable-totalPoints" align="right">
+                <TableCell align="right">
+                  {renderStat(stats.fumbles.fumbles)}
+                </TableCell>
+                <TableCell
+                  className="PlayerTable-totalPoints"
+                  align="right"
+                  sx={{ fontWeight: "bold" }}
+                >
                   {renderStat(stats.totalPoints)}
                 </TableCell>
               </TableRow>
@@ -144,6 +161,6 @@ const PlayerTable = ({ players, renderAction }: Props) => {
   );
 };
 
-const renderStat = (stat: number) => stat > 0 ? <p>{stat}</p> : <p>-</p>
+const renderStat = (stat: number) => (stat > 0 ? <p>{stat}</p> : <p>-</p>);
 
 export default PlayerTable;
