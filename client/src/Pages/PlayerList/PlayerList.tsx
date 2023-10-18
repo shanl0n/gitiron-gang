@@ -19,6 +19,13 @@ const Container = styled.div`
 const PaginationSearch = styled.div`
   display: flex;
   margin-bottom: 3px;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const BottomPagination = styled.div`
+  display: flex;
+  justify-content: end;
 `
 
 const GET_PLAYERS = gql`
@@ -155,6 +162,8 @@ const PlayerList = () => {
     <Container>
       <PaginationSearch>
       <TextField
+        sx={{width: "17rem"}}
+        size="small"
         value={searchTerm}
         id="outlined-search"
         label="Player Search"
@@ -164,7 +173,7 @@ const PlayerList = () => {
       {pagination}
       </PaginationSearch>
       <PlayerTable players={data.players.nodes} renderAction={renderAction} />
-      {pagination}
+      <BottomPagination>{pagination}</BottomPagination>
     </Container>
   );
 };

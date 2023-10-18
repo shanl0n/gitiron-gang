@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   background-color: #FAFAFA;
-  
+  padding: 0 0 0 82px;
   margin-bottom: 3rem;
   box-shadow: 0 1px 2px 0 rgba(0,0,0,.24);
 `
@@ -87,9 +87,9 @@ const MyTeam = () => {
   return (
     <>
     <ButtonContainer>
-      <Button sx={{color: '#333333'}} href="/players">Add</Button>
-      <Button onClick={() => setDropping(true)}>Drop</Button>
-      <Button href="/players">Trade</Button>
+      <Button sx={{color: '#333333', fontSize: "16px"}} href="/players">Add</Button>
+      <Button sx={{color: '#333333', fontSize: "16px"}}  onClick={() => setDropping(true)}>Drop</Button>
+      <Button sx={{color: '#333333', fontSize: "16px"}} href="/players">Trade</Button>
     </ButtonContainer>
       <Container>
         <PlayerTable players={data.fantasyTeam.players} renderAction={renderAction}/>

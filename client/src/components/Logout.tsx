@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-const Logout = () => {
+const LogoutButton = () => {
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+  };
+
   return (
-    <div>Logout</div>
-  )
-}
+    <button onClick={logout}>Logout</button>
+  );
+};
 
-export default Logout
+export default LogoutButton;

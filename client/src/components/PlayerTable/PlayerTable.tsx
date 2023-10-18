@@ -65,25 +65,25 @@ const PlayerTable = ({ players, renderAction }: Props) => {
             <TableCell className="Secondary" align="center">
               Int
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               Att
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               Yds
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               TD
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               Rec
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               Yds
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               TD
             </TableCell>
-            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+            <TableCell align="center" className="Secondary">
               Fumbles
             </TableCell>
             <TableCell align="center" className="Primary">
