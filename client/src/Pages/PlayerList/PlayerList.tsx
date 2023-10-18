@@ -5,13 +5,20 @@ import { Player, PlayerConnection } from "@types";
 import AddPlayer from "./AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
 import styled from "styled-components";
+import { Button } from "@mui/material";
 
 const Container = styled.div`
-  width: 62rem;
+  width: 985px;
   margin-left: auto;
   margin-right: auto;
   padding-top: 3rem;
 `;
+
+const ButtonContainer = styled.div`
+display: flex;
+justify-content: space-between;
+padding-bottom: 1rem;
+`
 
 const GET_PLAYERS = gql`
   query GetPlayers($input: PlayersInput) {
@@ -108,12 +115,14 @@ const PlayerList = () => {
 
   return (
     <Container>
+      <ButtonContainer>
       <button onClick={handlePreviousPage} disabled={!data.players.pageInfo.hasPreviousPage}>
         Previous Page
       </button>
       <button onClick={handleNextPage} disabled={!data.players.pageInfo.hasNextPage}>
         Next Page
       </button>
+      </ButtonContainer>
       <PlayerTable
         players={data.players.edges.map((edge) => edge.node)}
         renderAction={renderAction}
