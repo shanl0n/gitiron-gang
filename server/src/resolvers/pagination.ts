@@ -1,7 +1,9 @@
 import { ApolloError } from "apollo-server-express";
-import { Connection, PaginationInput } from "../schema/types";
-import { Filter, ObjectId, Sort, WithId } from "mongodb";
+import { Connection, PaginationInput, Node, Edge } from "../schema/types";
+import { Filter, WithId } from "mongodb";
 import { Collection } from "mongoose";
+import MongoPaging from "mongo-cursor-pagination";
+import { encode as cursorEncode } from "mongo-cursor-pagination/src/utils/bsonUrlEncoding";
 
 const validatePaginationInput = (input: PaginationInput) => {
   if (input.first && input.last) {
@@ -21,76 +23,47 @@ const validatePaginationInput = (input: PaginationInput) => {
   }
 }
 
-type HasNextF<T> = (data: WithId<T>[]) => Promise<boolean>;
-
-interface MongoPaginationOptions<T> {
-  filter: Filter<T>;
-  sort: Sort;
-  limit: number;
-  reverseOrder: boolean;
-  hasNext: HasNextF<T>;
+interface MongoPage<T extends Node> {
+  results: WithId<T>[],
+  hasNext: boolean,
+  hasPrevious: boolean,
+  next?: string,
+  previous?: string;
 }
-export const paginationInputToMongo = <T>(collection: Collection<T>, input?: PaginationInput): MongoPaginationOptions<T> => {
-  validatePaginationInput(input);
+
+export const paginationQuery = async <T extends Node>(collection: Collection<T>, input?: PaginationInput, query?: Filter<T>): Promise<Connection<T>> => {
+  if (input) validatePaginationInput(input);
 
   let limit = 25;
-  let sort: Sort = { _id: 1 };
   let reverseOrder = false;
-  let filter = {};
 
-  if (input.first) limit = input.first;
-  if (input.last) limit = input.last;
+  if (input?.first) limit = input.first;
+  if (input?.last) limit = input.last;
 
-  if (input.last || input.beforeCursor) {
-    sort = { _id: -1 };
+  if (input?.last || input?.beforeCursor) {
     reverseOrder = true;
   }
 
-  if (input.afterCursor) {
-    filter = {
-      _id: { $gt: new ObjectId(input.afterCursor) }
-    }
-  }
-  if (input.beforeCursor) {
-    filter = {
-      _id: { $lt: new ObjectId(input.beforeCursor) }
-    }
-  }
+  const page = await MongoPaging.find(collection, {
+    limit,
+    query,
+    next: input?.afterCursor,
+    previous: input?.beforeCursor,
+    sortAscending: reverseOrder
+  }) as MongoPage<T>;
 
-  const hasNext = async (items: WithId<T>[]) => {
-    if (!items.length) return false;
-    
-    const order = reverseOrder ? '$lt' : '$gt';
-    const cursor = new ObjectId(items[items.length - 1]._id);
-    
-    const filter: Filter<T> = {
-      _id: {
-        [order]: cursor,
-      }
-    };
-
-    return await collection.findOne(filter).then(() => true).catch(() => false);
-  };
+  const edges = page.results.map((item) => ({
+    cursor: cursorEncode(item._id),
+    node: item,
+  } as Edge<T>));
 
   return {
-    limit,
-    sort,
-    filter,
-    reverseOrder,
-    hasNext,
-  }
-}
-
-export const createConnection = <T>(items: WithId<T>[], reverseOrder: boolean, hasNextF: HasNextF<T>): Connection<T> => {
-  const hasNext = hasNextF(items);
-
-  // if (items.length === 0) {
-  //   return {
-  //     pageInfo: {
-  //       hasNextPage: reverseOrder ,
-  //       hasPreviousPage: Boolean(input.hasP),
-  //     },
-  //     edges: [],
-  //   };
-  }
+    pageInfo: {
+      hasNextPage: page.hasNext as boolean,
+      hasPreviousPage: page.hasPrevious as boolean,
+      startCursor: page.previous as string,
+      endCursor: page.next as string,
+    },
+    edges,
+  };
 }

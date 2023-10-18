@@ -60,7 +60,7 @@ export const typeDefs = `#graphql
     node: Player!
   }
 
-  type Player {
+  type Player implements Node {
     id: ID!
     name: String!
     position: String!

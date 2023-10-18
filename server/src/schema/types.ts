@@ -47,32 +47,32 @@ interface PageInfo {
   endCursor?: string;
 }
 
-interface Node<T> {
+export interface Node {
   id: string;
 }
 
-interface Edge<T> {
+export interface Edge<T extends Node> {
   cursor: string;
-  node: Node<T>;
+  node: T;
 }
 
-export interface Connection<T> {
+export interface Connection<T extends Node> {
   pageInfo: PageInfo;
   edges: Edge<T>[];
 }
 
-export interface PlayerConnection extends Connection<PlayerModel> {
+export interface PlayerConnection extends Connection<Player> {
   edges: PlayerEdge[];
 }
 
-interface PlayerEdge extends Edge<PlayerModel> {
+interface PlayerEdge extends Edge<Player> {
   node: Player;
 }
 
 export type Player = Omit<PlayerModel, "team_id"> & {
   gameStatsSummary: GameStatsSummary;
   fantasyTeam?: FantasyTeam;
-};
+} & Node;
 
 export type FantasyTeam = FantasyTeamModel & {
   players: Player[];

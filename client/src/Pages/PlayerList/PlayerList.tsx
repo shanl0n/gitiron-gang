@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useQuery, gql } from "@apollo/client";
-import { Player } from "@types";
+import { Player, PlayerConnection } from "@types";
 import AddPlayer from "./AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
 import styled from "styled-components";
@@ -10,46 +10,58 @@ const Container = styled.div`
   width: 62rem;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 3rem;
 `
 
 const GET_PLAYERS = gql`
   query GetPlayers {
     players {
-      id
-      name
-      position
-      fantasyTeam {
-        id
-        name
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
       }
-      gameStatsSummary {
-        rushing {
-          attempts
-          touchdowns
-          yards
+      edges {
+        cursor
+        node {
+          id
+          name
+          position
+          fantasyTeam {
+            id
+            name
+          }
+          gameStatsSummary {
+            rushing {
+              attempts
+              touchdowns
+              yards
+            }
+            receiving {
+              receptions
+              yards
+              touchdowns
+            }
+            passing {
+              completions
+              yards
+              touchdowns
+              interceptions
+            }
+            fumbles {
+              fumbles
+            }
+            totalPoints
+          }
         }
-        receiving {
-          receptions
-          yards
-          touchdowns
         }
-        passing {
-          completions
-          yards
-          touchdowns
-          interceptions
-        }
-        fumbles {
-          fumbles
-        }
-        totalPoints
       }
-    }
   }
 `;
 
 interface GetPlayersData {
-  players: Player[];
+  players: PlayerConnection;
 }
 
 const PlayerList = () => {
@@ -71,6 +83,6 @@ const PlayerList = () => {
     );
   };
 
-  return <Container><PlayerTable players={data.players} renderAction={renderAction} /></Container>;
+  return <Container><PlayerTable players={data.players.edges.map((edge) => edge.node)} renderAction={renderAction} /></Container>;
 };
 export default PlayerList;

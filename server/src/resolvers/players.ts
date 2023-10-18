@@ -1,8 +1,6 @@
-import { Filter, ObjectId, Sort } from "mongodb";
 import { RequestContext } from "../context";
 import { PlayersInput } from "../schema/types";
-import { paginationInputToMongo } from "./pagination";
-import { PlayerModel } from "../datasource/models";
+import { paginationQuery } from "./pagination";
 
 const OFFENCE_POSITIONS = ["RB", "QB", "WR", "TE"];
 
@@ -14,26 +12,15 @@ export const playerResolvers = {
       ctx: RequestContext,
       info
     ) => {
-      const { filter, sort, limit, reverseOrder } =
-        paginationInputToMongo<PlayerModel>(input);
-
-      const playerFind = await ctx.dataSources.players
-        .find(
-          {
-            ...filter,
-            position: {
-              $in: OFFENCE_POSITIONS,
-            },
-          },
-          {
-            limit,
-            sort,
+      return await paginationQuery(
+        ctx.dataSources.players,
+        input,
+        {
+          position: {
+            $in: OFFENCE_POSITIONS
           }
-        )
-     
-      const players = playerFind.toArray();
-
-      return reverseOrder ? players.reverse() : players;
+        }
+      );
     },
   },
 };
