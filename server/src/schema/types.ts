@@ -5,7 +5,9 @@ export interface PaginationInput {
   pageSize?: number;
 }
 
-export type PlayersInput = PaginationInput;
+export type PlayersInput = PaginationInput & {
+  searchTerm?: string;
+};
 
 export interface RushingStats {
   attempts: number;

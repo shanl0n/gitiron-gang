@@ -1,4 +1,6 @@
+import { Filter } from "mongodb";
 import { RequestContext } from "../context";
+import { PlayerModel } from "../datasource/models";
 import { PlayersInput } from "../schema/types";
 import { paginationQuery } from "./pagination";
 
@@ -12,14 +14,19 @@ export const playerResolvers = {
       ctx: RequestContext,
       info
     ) => {
+      const filter: Filter<PlayerModel> = {
+        position: {
+          $in: OFFENCE_POSITIONS
+        },
+      };
+
+      if (input?.searchTerm) {
+        filter.name = new RegExp(input.searchTerm, "gi");
+      }
       return await paginationQuery(
         ctx.dataSources.players,
         input,
-        {
-          position: {
-            $in: OFFENCE_POSITIONS
-          }
-        }
+        filter,
       );
     },
   },

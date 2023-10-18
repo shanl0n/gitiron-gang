@@ -8,6 +8,7 @@ export const typeDefs = `#graphql
   input PlayersInput {
     page: Int
     pageSize: Int
+    searchTerm: String
   }
 
   type Mutation {
