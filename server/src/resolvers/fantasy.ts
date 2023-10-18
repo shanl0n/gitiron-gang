@@ -8,6 +8,7 @@ import {
 } from "../datasource/models";
 import { playerStatsSummary } from "./stats";
 import { Player } from "../schema/types";
+import { ObjectId } from "mongodb";
 
 export const fantasyResolvers = {
   Mutation: {
@@ -50,6 +51,56 @@ export const fantasyResolvers = {
       });
 
       return trade.acknowledged;
+    },
+    updateTrade: async (parent, args, ctx: RequestContext, info) => {
+      const trade = await ctx.dataSources.playerTrades.findOne({
+        _id: new ObjectId(args.id)
+      });
+
+      if (args.status === TradeStatus.Accepted && ctx.jwtPayload!.fantasyTeamId === trade.sellFantasyTeamId) {
+        throw new ApolloError("Cannot accept outgoing trades", "BAD_USER_INPUT");
+      }
+      if (args.status === TradeStatus.Cancelled && ctx.jwtPayload!.fantasyTeamId === trade.buyFantasyTeamId) {
+        throw new ApolloError("Cannot cancel, only reject incoming trades", "BAD_USER_INPUT");
+      }
+      if (args.status === TradeStatus.Rejected && ctx.jwtPayload!.fantasyTeamId === trade.sellFantasyTeamId) {
+        throw new ApolloError("Cannot reject, only cancel outgoing trades", "BAD_USER_INPUT");
+      }
+      if (args.status === TradeStatus.Pending) {
+        throw new ApolloError("Cannot change status to pending", "BAD_USER_INPUT");
+      }
+
+      if (args.status === TradeStatus.Accepted) { 
+        await ctx.dataSources.fantasyTeamPlayers.deleteOne({
+          playerId: trade.buyPlayerId,
+          fantasyTeamId: trade.buyFantasyTeamId
+        });
+
+        await ctx.dataSources.fantasyTeamPlayers.deleteOne({
+          playerId: trade.sellPlayerId,
+          fantasyTeamId: trade.sellFantasyTeamId
+        });
+
+        await ctx.dataSources.fantasyTeamPlayers.insertOne({
+          playerId: trade.sellFantasyTeamId,
+          fantasyTeamId: trade.buyFantasyTeamId,
+        })
+
+        await ctx.dataSources.fantasyTeamPlayers.insertOne({
+          playerId: trade.buyFantasyTeamId,
+          fantasyTeamId: trade.sellFantasyTeamId,
+        })
+      }
+
+      const updated = await ctx.dataSources.playerTrades.updateOne({
+        _id: trade._id
+      }, {
+        $set: {
+          status: args.status
+        }
+      });
+
+      return updated.acknowledged;
     }
   },
   Query: {
@@ -78,7 +129,7 @@ export const fantasyResolvers = {
       };
     },
     playerTrades: async (parent, args, ctx: RequestContext, info) => {
-      return await ctx.dataSources.playerTrades.find({
+      const trades = await ctx.dataSources.playerTrades.find({
         $or: [
           {
             sellFantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
@@ -88,6 +139,11 @@ export const fantasyResolvers = {
           }
         ]
       }).toArray();
+
+      return trades.map((trade) => ({
+        ...trade,
+        id: trade._id.toString()
+      }))
     }
   },
   PlayerTrade: {

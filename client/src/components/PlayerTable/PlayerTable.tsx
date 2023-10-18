@@ -26,7 +26,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
       <Table sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead>
           <TableRow sx={{ height: "1px" }}>
-            <TableCell colSpan={3} className="Primary" />
+            <TableCell colSpan={renderAction ? 3 : 2} className="Primary" />
             <TableCell className="Primary" colSpan={4} align="center">
               Passing
             </TableCell>
@@ -44,9 +44,10 @@ const PlayerTable = ({ players, renderAction }: Props) => {
             </TableCell>
           </TableRow>
           <TableRow style={{ maxHeight: 1 }}>
-            <TableCell className="Primary" align="center">
+            {renderAction && <TableCell className="Primary" align="center">
               Action
             </TableCell>
+}
             <TableCell className="Primary" align="center">
               Player
             </TableCell>
@@ -104,9 +105,10 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   },
                 }}
               >
-                <TableCell align="center">
-                  {renderAction && renderAction(player)}
+                {renderAction && <TableCell align="center">
+                  {renderAction(player)}
                 </TableCell>
+          }
                 <TableCell align="right">
                   <div>{player.name}</div>
                   <div className="PositionName">{player.position}</div>

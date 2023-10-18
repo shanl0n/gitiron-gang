@@ -124,7 +124,6 @@ const PlayerList = () => {
     page: number
   ) => {
     event?.preventDefault();
-    console.log(`change page to: ${page}`);
 
     refetch({
       input: {
@@ -136,8 +135,6 @@ const PlayerList = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    console.log(`change to: ${event.target.value}`);
-    console.log(event);
     setSearchTerm(event.target.value);
     refetch({
       input: {

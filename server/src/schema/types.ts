@@ -75,6 +75,7 @@ export interface FantasyGame {
 }
 
 export interface PlayerTrade {
+  id: string;
   sellPlayer: Player;
   buyPlayer: Player;
   status: TradeStatus;

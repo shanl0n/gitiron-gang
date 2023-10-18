@@ -10,6 +10,7 @@ export const typeDefs = `#graphql
     addPlayer(id: ID!): Boolean!
     dropPlayer(id: ID!): Boolean!
     tradePlayer(sellPlayerId: ID!, buyPlayerId: ID!): Boolean
+    updateTrade(id: ID!, status: TradeStatus!): Boolean
   }
 
 
@@ -93,10 +94,11 @@ export const typeDefs = `#graphql
     PENDING,
     ACCEPTED,
     REJECTED,
-    CANCELED
+    CANCELLED
   }
 
   type PlayerTrade {
+    id: ID!
     sellPlayer: Player!
     buyPlayer: Player!
     status: TradeStatus

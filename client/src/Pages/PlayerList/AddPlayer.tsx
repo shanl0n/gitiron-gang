@@ -19,7 +19,6 @@ const AddPlayer = ({ playerId, onAdd }: Props) => {
     variables: { playerId },
   });
   const handleAddPlayer = async () => {
-    console.log(`adding player ${playerId}`);
     const resp = await addPlayer();
     if (resp.errors) {
       alert("Error!");
