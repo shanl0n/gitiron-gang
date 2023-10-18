@@ -82,12 +82,12 @@ export const fantasyResolvers = {
         });
 
         await ctx.dataSources.fantasyTeamPlayers.insertOne({
-          playerId: trade.sellFantasyTeamId,
+          playerId: trade.sellPlayerId,
           fantasyTeamId: trade.buyFantasyTeamId,
         })
 
         await ctx.dataSources.fantasyTeamPlayers.insertOne({
-          playerId: trade.buyFantasyTeamId,
+          playerId: trade.buyPlayerId,
           fantasyTeamId: trade.sellFantasyTeamId,
         })
       }
