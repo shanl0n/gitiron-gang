@@ -78,22 +78,6 @@ const PlayerList = () => {
 
   const pageInfo = data.players.pageInfo;
 
-  const handleNextPage = () => {
-    refetch({
-      input: {
-        page: pageInfo.currentPage + 1,
-      },
-    });
-  };
-
-  const handlePreviousPage = () => {
-    refetch({
-      input: {
-        page: pageInfo.currentPage - 1,
-      },
-    });
-  };
-
   const handlePlayerAdded = () => {
     console.log("redirect");
     window.location.href = "/myteam";
@@ -122,7 +106,7 @@ const PlayerList = () => {
   };
 
   const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
+    event: React.ChangeEvent<unknown>,
     page: number
   ) => {
     event?.preventDefault();
@@ -136,19 +120,7 @@ const PlayerList = () => {
     });
   };
 
-  const pagination = (
-    <div align="right">
-      <TablePagination
-        count={pageInfo.itemCount}
-        page={pageInfo.currentPage}
-        onPageChange={handleChangePage}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={handleRowsPerPageChange}
-      />
-    </div>
-  );
-
-  // const pagination = <Pagination count={pageInfo.pageCount} page={pageInfo.currentPage} />
+  const pagination = <Pagination count={pageInfo.pageCount} page={pageInfo.currentPage} onChange={handleChangePage} />
 
   return (
     <Container>

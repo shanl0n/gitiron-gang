@@ -23,8 +23,8 @@ export const paginationQuery = async <T extends Node>(
   const pageSize = input?.pageSize || 25;
   const pageCount = Math.ceil(itemCount / pageSize);
 
-  const currentPage = input?.page || 0;
-  const offset = currentPage * pageSize;
+  const currentPage = input?.page || 1;
+  const offset = (currentPage - 1) * pageSize;
 
   const page = await collection
     .find(filter)
