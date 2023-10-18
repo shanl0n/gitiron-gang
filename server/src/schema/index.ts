@@ -1,9 +1,15 @@
 export const typeDefs = `#graphql
-
   type Query {
-    players: [Player!]!
+    players(input: PlayersInput): PlayerConnection!
     fantasyTeam: FantasyTeam!
     fantasyGame: FantasyGame!
+  }
+
+  input PlayersInput {
+    first: Int
+    last: Int
+    afterCursor: String
+    beforeCursor: String
   }
 
   type Mutation {
@@ -21,6 +27,37 @@ export const typeDefs = `#graphql
   type FantasyGame {
     myTeam: FantasyTeam!
     opponentsTeam: FantasyTeam!
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+
+  interface Connection {
+    pageInfo: PageInfo!
+    edges: [Edge!]!
+  }
+
+  interface Edge {
+    cursor: String!
+    node: Node!
+  }
+
+  interface Node {
+    id: ID!
+  }
+
+  type PlayerConnection implements Connection {
+    pageInfo: PageInfo!
+    edges: [PlayerEdge!]!
+  }
+
+  type PlayerEdge implements Edge {
+    cursor: String!
+    node: Player!
   }
 
   type Player {
