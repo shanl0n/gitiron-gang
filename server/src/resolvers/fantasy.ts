@@ -22,6 +22,17 @@ export const fantasyResolvers = {
       });
       return response.acknowledged;
     },
+    tradePlayer: async (parent, args, ctx: RequestContext, info) => {
+      // TODO: verify user owns the sell player
+      // TODO: find current fantasy team for each player
+      // save as
+      // {
+      //   sellPlayerId: args.sellPlayerId,
+      //   buyPlayerId: args.buyPlayerId,
+      //   sellFantasyTeamId: "TODO current fantasy team for sell",
+      //   buyFantasyTeamId: "TODO current fantasy team for buy",
+      // };
+    }
   },
   Query: {
     fantasyTeam: async (parent, args, ctx: RequestContext, info) => {

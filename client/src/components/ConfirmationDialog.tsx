@@ -23,10 +23,10 @@ const ConfirmationDialog = ({title, content, confirmText, onCancel, onConfirm, o
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{content}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onCancel}>
+        <Button onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onConfirm}>{confirmText}</Button>
+        <Button color="primary" onClick={onConfirm}>{confirmText}</Button>
       </DialogActions>
     </Dialog>
   );
