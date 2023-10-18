@@ -25,7 +25,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@types": ["../server/src/schema/types"]
+      "@types": ["../server/src/schema/types"],
+      "@models": ["../server/src/datasource/models"]
     }
   },
   "include": ["src"],

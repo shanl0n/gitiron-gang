@@ -3,6 +3,7 @@ export const typeDefs = `#graphql
     players(input: PlayersInput): PlayerConnection!
     fantasyTeam: FantasyTeam!
     fantasyGame: FantasyGame!
+    playerTrades: [PlayerTrade!]!
   }
 
   type Mutation {
@@ -86,5 +87,18 @@ export const typeDefs = `#graphql
   
   type FumbleStats {
     fumbles: Int!
+  }
+
+  enum TradeStatus {
+    PENDING,
+    ACCEPTED,
+    REJECTED,
+    CANCELED
+  }
+
+  type PlayerTrade {
+    sellPlayer: Player!
+    buyPlayer: Player!
+    status: TradeStatus
   }
 `;

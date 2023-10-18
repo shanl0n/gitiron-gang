@@ -58,9 +58,10 @@ export interface FantasyGameModel {
 }
 
 export enum TradeStatus {
-  Pending = "pending",
-  Accepted = "accepted",
-  Rejected = "rejected"
+  Pending = "PENDING",
+  Accepted = "ACCEPTED",
+  Rejected = "REJECTED",
+  Canceled = "CANCELED"
 }
 export interface PlayerTradeModel {
   buyPlayerId: string;

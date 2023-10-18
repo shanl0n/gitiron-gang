@@ -3,9 +3,11 @@ import { RequestContext } from "../context";
 import {
   PlayerGameStatsModel,
   PlayerModel,
+  PlayerTradeModel,
   TradeStatus,
 } from "../datasource/models";
 import { playerStatsSummary } from "./stats";
+import { Player } from "../schema/types";
 
 export const fantasyResolvers = {
   Mutation: {
@@ -75,6 +77,26 @@ export const fantasyResolvers = {
         weekId,
       };
     },
+    playerTrades: async (parent, args, ctx: RequestContext, info) => {
+      return await ctx.dataSources.playerTrades.find({
+        $or: [
+          {
+            sellFantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
+          },
+          {
+            buyFantasyTeamId: ctx.jwtPayload!.fantasyTeamId,
+          }
+        ]
+      }).toArray();
+    }
+  },
+  PlayerTrade: {
+    sellPlayer: async (parent: PlayerTradeModel, args, ctx: RequestContext, info) => {
+      return await playerForTrade(ctx, parent.sellPlayerId, parent.sellFantasyTeamId);
+    },
+    buyPlayer: async (parent: PlayerTradeModel, args, ctx: RequestContext, info) => {
+      return await playerForTrade(ctx, parent.buyPlayerId, parent.buyFantasyTeamId);
+    },
   },
   FantasyTeam: {
     players: async (
@@ -109,11 +131,14 @@ export const fantasyResolvers = {
   },
   Player: {
     fantasyTeam: async (
-      parent: PlayerModel,
+      parent: PlayerModel | Player,
       args,
       ctx: RequestContext,
       info
     ) => {
+      if ("fantasyTeam" in parent && parent.fantasyTeam) {
+        return parent.fantasyTeam
+      }
       return await ctx.dataSources.fantasyTeamPlayers
         .findOne({ playerId: parent.id })
         .then((fantasyTeamPlayer) => {
@@ -198,3 +223,17 @@ const fantasyTeamForWeek = async (
     totalPoints,
   };
 };
+
+const playerForTrade = async (ctx: RequestContext, playerId: string, fantasyTeamId: string) => {
+  const player = await ctx.dataSources.players.findOne({
+    id: playerId,
+  });
+  const fantasyTeam = await ctx.dataSources.fantasyTeams.findOne({
+    id: fantasyTeamId,
+  });
+
+  return {
+    ...player,
+    fantasyTeam,
+  };
+}

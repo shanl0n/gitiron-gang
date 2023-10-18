@@ -1,4 +1,4 @@
-import { FantasyTeamModel, PlayerModel } from "../datasource/models";
+import { FantasyTeamModel, PlayerModel, TradeStatus } from "../datasource/models";
 
 export interface PaginationInput {
   page?: number;
@@ -72,4 +72,10 @@ export type FantasyTeam = FantasyTeamModel & {
 export interface FantasyGame {
   myTeam: FantasyTeam;
   opponentsTeam: FantasyTeam;
+}
+
+export interface PlayerTrade {
+  sellPlayer: Player;
+  buyPlayer: Player;
+  status: TradeStatus;
 }
