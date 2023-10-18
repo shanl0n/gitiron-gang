@@ -212,7 +212,9 @@ const TradeCentre = () => {
               Accepted
             </Typography>
             {accepted.map((trade) =>
-              renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+              trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
+                ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+                : renderTrade(trade.buyPlayer, trade.sellPlayer, false)
             )}
           </>
         );
@@ -223,7 +225,9 @@ const TradeCentre = () => {
               Rejected
             </Typography>
             {rejected.map((trade) =>
-              renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+              trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
+                ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+                : renderTrade(trade.buyPlayer, trade.sellPlayer, false)
             )}
           </>
         );
@@ -234,7 +238,9 @@ const TradeCentre = () => {
               Cancelled
             </Typography>
             {cancelled.map((trade) =>
-              renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+              trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
+                ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
+                : renderTrade(trade.buyPlayer, trade.sellPlayer, false)
             )}
           </>
         );
