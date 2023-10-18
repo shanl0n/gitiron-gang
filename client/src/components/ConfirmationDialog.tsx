@@ -26,7 +26,7 @@ const ConfirmationDialog = ({title, content, confirmText, onCancel, onConfirm, o
         <Button onClick={onCancel}>
           Cancel
         </Button>
-        <Button color="primary" onClick={onConfirm}>{confirmText}</Button>
+        <Button variant="contained" color="primary" onClick={onConfirm}>{confirmText}</Button>
       </DialogActions>
     </Dialog>
   );
