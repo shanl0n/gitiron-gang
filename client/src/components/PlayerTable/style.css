@@ -1,6 +1,6 @@
 .PlayerTable th {
   padding: 1px;
-  margin: 0px;
+  margin: 1px;
 }
 
 .PlayerTable td {
@@ -16,4 +16,14 @@
   /* box-shadow: 0px 2px 2px black; */
 }
 
+.PositionName {
+  color: #666666;
+}
 
+.Primary {
+  background-color: #E3E3E3;
+}
+
+.Secondary {
+  background-Color: #F4F4F4;
+}

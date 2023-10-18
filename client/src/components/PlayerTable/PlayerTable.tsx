@@ -25,40 +25,73 @@ const PlayerTable = ({ players, renderAction }: Props) => {
     >
       <Table sx={{ maxWidth: 985 }} aria-label="simple table">
         <TableHead>
-          <TableRow sx={{ height: "1px", backgroundColor: "whitesmoke" }}>
-            <TableCell colSpan={3} />
-            <TableCell colSpan={4} align="center">
+          <TableRow sx={{ height: "1px" }}>
+            <TableCell colSpan={3} className="Primary"/>
+            <TableCell className="Primary"
+              colSpan={4}
+              align="center"
+            >
               Passing
             </TableCell>
-            <TableCell colSpan={3} align="center">
+            <TableCell className="Primary"
+              colSpan={3}
+              align="center"
+            >
               Rushing
             </TableCell>
-            <TableCell colSpan={3} align="center">
+            <TableCell className="Primary"
+              colSpan={3}
+              align="center"
+            >
               Receiving
             </TableCell>
-            <TableCell colSpan={1} align="center">
+            <TableCell className="Primary" colSpan={1} align="center">
               Fum
             </TableCell>
-            <TableCell colSpan={1} align="center">
+            <TableCell className="Primary" colSpan={1} align="center">
               Fantasy
             </TableCell>
           </TableRow>
           <TableRow style={{ maxHeight: 1 }}>
-            <TableCell align="center">Action</TableCell>
-            <TableCell align="center">Player</TableCell>
-            <TableCell align="center">Manager</TableCell>
-            <TableCell align="center">Comp</TableCell>
-            <TableCell align="center">Yds</TableCell>
-            <TableCell align="center">TD</TableCell>
-            <TableCell align="center">Int</TableCell>
-            <TableCell align="center">Att</TableCell>
-            <TableCell align="center">Yds</TableCell>
-            <TableCell align="center">TD</TableCell>
-            <TableCell align="center">Rec</TableCell>
-            <TableCell align="center">Yds</TableCell>
-            <TableCell align="center">TD</TableCell>
-            <TableCell align="center">Fumbles</TableCell>
-            <TableCell align="center">Points</TableCell>
+            <TableCell className="Primary" align="center">Action</TableCell>
+            <TableCell className="Primary" align="center">Player</TableCell>
+            <TableCell className="Primary" align="center">Manager</TableCell>
+            <TableCell className="Secondary" align="center">
+              Comp
+            </TableCell>
+            <TableCell className="Secondary" align="center">
+              Yds
+            </TableCell>
+            <TableCell className="Secondary" align="center">
+              TD
+            </TableCell>
+            <TableCell className="Secondary" align="center">
+              Int
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              Att
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              Yds
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              TD
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              Rec
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              Yds
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              TD
+            </TableCell>
+            <TableCell align="center" sx={{ backgroundColor: "#F4F4F4" }}>
+              Fumbles
+            </TableCell>
+            <TableCell align="center" className="Primary">
+              Points
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -74,12 +107,12 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   },
                 }}
               >
-                <TableCell align="center">
+                <TableCell  align="center">
                   {renderAction && renderAction(player)}
                 </TableCell>
                 <TableCell align="right">
                   <div>{player.name}</div>
-                  <div className="PositionColumn">{player.position}</div>
+                  <div className="PositionName">{player.position}</div>
                 </TableCell>
                 <TableCell align="right">Manager</TableCell>
                 <TableCell align="right">{stats.passing.completions}</TableCell>
