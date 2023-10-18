@@ -14,11 +14,10 @@ const Container = styled.div`
   padding-top: 3rem;
 `;
 
-const ButtonContainer = styled.div`
+const PaginationSearch = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-`;
+  margin-bottom: 3px;
+`
 
 const GET_PLAYERS = gql`
   query GetPlayers($input: PlayersInput) {
@@ -118,16 +117,32 @@ const PlayerList = () => {
         page: pageInfo.currentPage,
         pageSize,
         searchTerm: event.target.value,
-      }
+      },
     });
-  }
+  };
 
-  const pagination = <Pagination color="primary" count={pageInfo.pageCount} page={pageInfo.currentPage} onChange={handleChangePage} />
+  const pagination = (
+    <Pagination
+      sx={{margin: "5px"}}
+      color="primary"
+      count={pageInfo.pageCount}
+      page={pageInfo.currentPage}
+      onChange={handleChangePage}
+    />
+  );
 
   return (
     <Container>
-      <TextField value={searchTerm} id="outlined-search" label="Search field" type="search" onChange={handleSearchChange} />
+      <PaginationSearch>
+      <TextField
+        value={searchTerm}
+        id="outlined-search"
+        label="Player Search"
+        type="search"
+        onChange={handleSearchChange}
+      />
       {pagination}
+      </PaginationSearch>
       <PlayerTable players={data.players.nodes} renderAction={renderAction} />
       {pagination}
     </Container>
