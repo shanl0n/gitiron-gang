@@ -1,6 +1,7 @@
 import { Link } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
+import Logout from "./Logout";
 
 const Wrapper = styled.nav`
   background-color: white;
@@ -15,26 +16,21 @@ const Wrapper = styled.nav`
   padding: 0 0 0 82px;
   min-height: 40px;
   align-items: center;
+  width: 100%;
 `;
 
-const Navbar = () => {
+interface Props {
+  onLogout: () => void;
+}
+
+const Navbar = ({ onLogout }: Props) => {
   return (
     <Wrapper>
-      <Link
-        sx={{ fontSize: "20px", textDecoration: "none" }}
-      >
-        League
-      </Link>
-      <Link
-        sx={{ fontSize: "20px", textDecoration: "none" }}
-        href="/myteam"
-      >
+      <Link sx={{ fontSize: "20px", textDecoration: "none" }}>League</Link>
+      <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/myteam">
         My Team
       </Link>
-      <Link
-        sx={{ fontSize: "20px", textDecoration: "none" }}
-        href="/players"
-      >
+      <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/players">
         Players
       </Link>
       <Link
@@ -43,6 +39,9 @@ const Navbar = () => {
       >
         Game Center
       </Link>
+      <div>
+        <Logout onLogout={onLogout} />
+      </div>
     </Wrapper>
   );
 };

@@ -21,13 +21,21 @@ const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
+  
   const handleLogin = (token: string) => {
     localStorage.setItem(TOKEN_KEY, token);
     setToken(token);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    setToken(null);
+  }
+
   if (!token) {
     return <Login onLogin={handleLogin} />;
   }
+
   const authLink = setContext((_, { headers }) => ({
     headers: {
       ...headers,
@@ -38,9 +46,10 @@ function App() {
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
+  
   return (
     <ApolloProvider client={client}>
-      <Navbar />
+      <Navbar onLogout={handleLogout}/>
       <Routes>
         <Route path="/" element={<MyTeam />} />
         <Route path="/myteam" element={<MyTeam />} />

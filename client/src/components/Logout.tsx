@@ -1,13 +1,15 @@
 import React from 'react';
+import LogoutIcon from "@mui/icons-material/Logout";
+import { IconButton } from '@mui/material';
 
-const LogoutButton = () => {
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
-  };
+interface Props {
+  onLogout: () => void;
+}
 
+const Logout = ({ onLogout }: Props) => {
   return (
-    <button onClick={logout}>Logout</button>
+    <IconButton color="primary" onClick={onLogout}><LogoutIcon/></IconButton>
   );
 };
 
-export default LogoutButton;
+export default Logout;
