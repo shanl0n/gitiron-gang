@@ -6,6 +6,8 @@ import AddPlayer from "./AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
 import styled from "styled-components";
 import { Button, Pagination, TablePagination, TextField } from "@mui/material";
+import TradePlayer from "./TradePlayer";
+import DropPlayer from "../MyTeam/DropPlayer";
 
 const Container = styled.div`
   width: 985px;
@@ -22,6 +24,9 @@ const ButtonContainer = styled.div`
 
 const GET_PLAYERS = gql`
   query GetPlayers($input: PlayersInput) {
+    fantasyTeam {
+      id
+    }
     players(input: $input) {
       pageInfo {
         currentPage
@@ -65,6 +70,9 @@ const GET_PLAYERS = gql`
 
 interface GetPlayersData {
   players: PlayerConnection;
+  fantasyTeam: {
+    id: string;
+  }
 }
 
 const PlayerList = () => {
@@ -81,16 +89,28 @@ const PlayerList = () => {
   const pageInfo = data.players.pageInfo;
 
   const handlePlayerAdded = () => {
-    console.log("redirect");
     window.location.href = "/myteam";
   };
 
+  const refetchDefault = () => {
+    refetch({
+      input: {
+        page: pageInfo.currentPage,
+        pageSize,
+        searchTerm,
+      }
+    })
+  }
+
   const renderAction = (player: Player) => {
-    return player.fantasyTeam ? (
-      <p>`In fantasy team ${player.fantasyTeam.name}`</p>
-    ) : (
-      <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />
-    );
+    if (!player.fantasyTeam) {
+      return <AddPlayer onAdd={handlePlayerAdded} playerId={player.id} />;
+    }
+    if (player.fantasyTeam.id === data.fantasyTeam.id) {
+      return <DropPlayer player={player} onDrop={() => refetchDefault()} />;
+    }
+    
+    return  <TradePlayer onTrade={() => {}} buyPlayerId={player.id} />
   };
 
   const handleChangePage = (
