@@ -83,6 +83,8 @@ const PlayerList = () => {
     );
   };
 
+  
+
   return <Container><PlayerTable players={data.players.edges.map((edge) => edge.node)} renderAction={renderAction} /></Container>;
 };
 export default PlayerList;
