@@ -5,7 +5,7 @@ import { Player, PlayerConnection } from "@types";
 import AddPlayer from "./AddPlayer";
 import PlayerTable from "../../components/PlayerTable";
 import styled from "styled-components";
-import { Button, Pagination, TablePagination } from "@mui/material";
+import { Button, Pagination, TablePagination, TextField } from "@mui/material";
 
 const Container = styled.div`
   width: 985px;
@@ -70,7 +70,9 @@ interface GetPlayersData {
 const PlayerList = () => {
   const { loading, error, data, refetch } =
     useQuery<GetPlayersData>(GET_PLAYERS);
+  // TODO: would be nice to be able to change page size
   const [pageSize, setPageSize] = useState(25);
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
@@ -91,20 +93,6 @@ const PlayerList = () => {
     );
   };
 
-  // todo: what type is event
-  const handleRowsPerPageChange = (event: any) => {
-    console.log("EVENT");
-    event?.preventDefault();
-    const newPageSize = event.target.value;
-    setPageSize(newPageSize);
-    refetch({
-      input: {
-        pageSize: newPageSize,
-        page: 1,
-      },
-    });
-  };
-
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     page: number
@@ -120,10 +108,25 @@ const PlayerList = () => {
     });
   };
 
-  const pagination = <Pagination count={pageInfo.pageCount} page={pageInfo.currentPage} onChange={handleChangePage} />
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    console.log(`change to: ${event.target.value}`);
+    console.log(event);
+    setSearchTerm(event.target.value);
+    refetch({
+      input: {
+        page: pageInfo.currentPage,
+        pageSize,
+        searchTerm: event.target.value,
+      }
+    });
+  }
+
+  const pagination = <Pagination color="primary" count={pageInfo.pageCount} page={pageInfo.currentPage} onChange={handleChangePage} />
 
   return (
     <Container>
+      <TextField value={searchTerm} id="outlined-search" label="Search field" type="search" onChange={handleSearchChange} />
       {pagination}
       <PlayerTable players={data.players.nodes} renderAction={renderAction} />
       {pagination}

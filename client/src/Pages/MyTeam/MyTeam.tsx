@@ -14,6 +14,13 @@ const Container = styled.div`
   margin-right: auto;
 `
 
+const ButtonContainer = styled.div`
+  background-color: #FAFAFA;
+  
+  margin-bottom: 3rem;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.24);
+`
+
 const GET_FANTASY_TEAM = gql`
   query GetFantasyTeam {
     fantasyTeam {
@@ -79,9 +86,11 @@ const MyTeam = () => {
 
   return (
     <>
-      <Button href="/players">Add</Button>
+    <ButtonContainer>
+      <Button sx={{color: '#333333'}} href="/players">Add</Button>
       <Button onClick={() => setDropping(true)}>Drop</Button>
       <Button href="/players">Trade</Button>
+    </ButtonContainer>
       <Container>
         <PlayerTable players={data.fantasyTeam.players} renderAction={renderAction}/>
       </Container>

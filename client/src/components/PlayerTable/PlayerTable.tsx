@@ -115,25 +115,25 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   <div className="PositionName">{player.position}</div>
                 </TableCell>
                 <TableCell align="right">Manager</TableCell>
-                <TableCell align="right">{stats.passing.completions}</TableCell>
-                <TableCell align="right">{stats.passing.yards}</TableCell>
-                <TableCell align="right">{stats.passing.touchdowns}</TableCell>
+                <TableCell align="right">{renderStat(stats.passing.completions)}</TableCell>
+                <TableCell align="right">{renderStat(stats.passing.yards)}</TableCell>
+                <TableCell align="right">{renderStat(stats.passing.touchdowns)}</TableCell>
                 <TableCell align="right">
-                  {stats.passing.interceptions}
+                  {renderStat(stats.passing.interceptions)}
                 </TableCell>
-                <TableCell align="right">{stats.rushing.attempts}</TableCell>
-                <TableCell align="right">{stats.rushing.yards}</TableCell>
-                <TableCell align="right">{stats.rushing.touchdowns}</TableCell>
+                <TableCell align="right">{renderStat(stats.rushing.attempts)}</TableCell>
+                <TableCell align="right">{renderStat(stats.rushing.yards)}</TableCell>
+                <TableCell align="right">{renderStat(stats.rushing.touchdowns)}</TableCell>
                 <TableCell align="right">
-                  {stats.receiving.receptions}
+                  {renderStat(stats.receiving.receptions)}
                 </TableCell>
-                <TableCell align="right">{stats.receiving.yards}</TableCell>
+                <TableCell align="right">{renderStat(stats.receiving.yards)}</TableCell>
                 <TableCell align="right">
-                  {stats.receiving.touchdowns}
+                  {renderStat(stats.receiving.touchdowns)}
                 </TableCell>
-                <TableCell align="right">{stats.fumbles.fumbles}</TableCell>
+                <TableCell align="right">{renderStat(stats.fumbles.fumbles)}</TableCell>
                 <TableCell className="PlayerTable-totalPoints" align="right">
-                  {stats.totalPoints}
+                  {renderStat(stats.totalPoints)}
                 </TableCell>
               </TableRow>
             );
@@ -143,5 +143,7 @@ const PlayerTable = ({ players, renderAction }: Props) => {
     </TableContainer>
   );
 };
+
+const renderStat = (stat: number) => stat > 0 ? <p>{stat}</p> : <p>-</p>
 
 export default PlayerTable;
