@@ -48,6 +48,7 @@ const GET_FANTASY_GAME = gql`
   }
 `;
 
+
 interface GetFantasyGameData {
   fantasyGame: FantasyGame;
 }
@@ -63,13 +64,16 @@ const GameCentre = () => {
   const myTeam = data.fantasyGame.myTeam;
   const opponentsTeam = data.fantasyGame.opponentsTeam;
 
-  return <ComparePlayers left={{
+  const myTeamTotalPoints = myTeam.totalPoints.toFixed(2);
+  const opponentsTeamTotalPoints = opponentsTeam.totalPoints.toFixed(2);
+
+  return <ComparePlayers compare={<div>VS</div>} left={{
     title: myTeam.name,
-    subtitle: myTeam.totalPoints.toString(),
+    subtitle: myTeamTotalPoints.toString(),
     players: myTeam.players,
   }} right={{
     title: opponentsTeam.name,
-    subtitle: opponentsTeam.totalPoints.toString(),
+    subtitle: opponentsTeamTotalPoints.toString(),
     players: opponentsTeam.players,
   }} />
 };

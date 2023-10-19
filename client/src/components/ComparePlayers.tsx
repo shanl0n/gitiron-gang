@@ -2,12 +2,15 @@ import { Player } from "@types";
 import styled from "styled-components";
 import PlayerTable from "./PlayerTable";
 
+
 const Wrapper = styled.div`
   background-color: white;
   color: black;
   display: flex;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
 `;
 const TitleContainerLeft = styled.div`
   color: black;
@@ -15,6 +18,7 @@ const TitleContainerLeft = styled.div`
   margin: auto;
   margin-right: 2rem;
   text-align: right;
+  min-width: 55rem;
 `;
 
 const TitleContainerRight = styled.div`
@@ -22,6 +26,7 @@ const TitleContainerRight = styled.div`
   font-weight: bold;
   margin: auto;
   margin-left: 2rem;
+  min-width: 55rem;
 `;
 
 const RightTitle = styled.p`
@@ -51,9 +56,10 @@ interface Comparison {
 interface Props {
   left: Comparison;
   right: Comparison;
+  compare: React.ReactNode
 }
 
-const ComparePlayers = ({left, right}: Props) => {
+const ComparePlayers = ({left, right, compare}: Props) => {
   return (
     <>
       <Wrapper>
@@ -62,7 +68,7 @@ const ComparePlayers = ({left, right}: Props) => {
           {left.subtitle}
           <PlayerTable players={left.players} />
         </TitleContainerLeft>
-        <VS>VS</VS>
+        {compare}
         <TitleContainerRight>
           <RightTitle>{right.title} </RightTitle>
           {right.subtitle}

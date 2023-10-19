@@ -16,7 +16,7 @@ const Wrapper = styled.nav`
   text-decoration: none;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 16px;
-  padding: 0 0 0 82px;
+  padding: 0 0 0 40px;
   min-height: 50px;
   align-items: center;
   width: 100vp;
@@ -26,7 +26,7 @@ const Wrapper = styled.nav`
 
 const LeftSide = styled.div`
   display: flex;
-  width: 20rem;
+  width: 25rem;
   justify-content: space-between;
 `
 
@@ -53,8 +53,10 @@ const Navbar = ({ onLogout }: Props) => {
           sx={{ fontSize: "20px", textDecoration: "none" }}
           href="/gamecentre"
         >
-          Game Center
+          Game Centre
         </Link>
+        <Link sx={{ fontSize: "20px", textDecoration: "none" }}
+          href="/trades">Trades</Link>
       </LeftSide>
       <RightSide className="Navbar-rightAlign">
         <Notifications />

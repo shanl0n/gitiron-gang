@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   background-color: #FAFAFA;
-  padding: 0 0 0 82px;
+  padding: 0 0 0 40px;
   margin-bottom: 3rem;
   box-shadow: 0 1px 2px 0 rgba(0,0,0,.24);
 `

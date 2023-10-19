@@ -18,6 +18,8 @@ import {
 import InboxIcon from "@mui/icons-material/Inbox";
 import { Player, PlayerTrade } from "@types";
 import ComparePlayers from "../../components/ComparePlayers";
+import styled from "styled-components";
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 export const GET_PLAYER_TRADES = gql`
   query GetPlayerTrades {
@@ -80,28 +82,25 @@ export interface GetPlayerTradesData {
   playerTrades: PlayerTrade[];
 }
 
-const renderMenuItem = (text: string, onClick: () => void) => (
-  <ListItem key={text} disablePadding>
-    <ListItemButton onClick={onClick}>
-      <ListItemIcon>
-        <InboxIcon />
-      </ListItemIcon>
-      <ListItemText primary={text} />
-    </ListItemButton>
-  </ListItem>
-);
+const FullTradeContainer=styled.div`
+  width: 115rem;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+`
 
 const renderTrade = (mine: Player, other: Player, incoming: boolean) => {
   return (
     <ComparePlayers
+    compare={<CompareArrowsIcon/>}
       left={{
         title: mine.fantasyTeam!.name,
-        subtitle: incoming ? "Buy" : "Sell",
+        subtitle: incoming ? "Incoming" : "Outgoing",
         players: [mine],
       }}
       right={{
         title: other.fantasyTeam!.name,
-        subtitle: incoming ? "Sell" : "Buy",
+        subtitle: incoming ? "Outgoing" : "Incoming",
         players: [other],
       }}
     />
@@ -114,7 +113,7 @@ const TradeCentre = () => {
 
   const [updateTrade] = useMutation(UPDATE_TRADE);
 
-  const [section, setSection] = useState("incoming");
+  const [section, setSection] = useState("Incoming");
 
   if (error) return <div>Error: ${error.clientErrors.join(", ")}</div>;
   if (loading) return <div>Loading...</div>;
@@ -152,14 +151,23 @@ const TradeCentre = () => {
     (trade) => trade.status === "CANCELLED"
   );
 
+  const renderMenuItem = (text: string) => (
+    <ListItem key={text} disablePadding>
+      <ListItemButton onClick={() => setSection(text)}>
+        <ListItemIcon>
+          <InboxIcon />
+        </ListItemIcon>
+        <ListItemText primary={text} />
+      </ListItemButton>
+    </ListItem>
+  );
+  
+
   const renderSection = () => {
     switch (section) {
-      case "incoming":
+      case "Incoming":
         return (
           <>
-            <Typography align="center" variant="h6" component="div">
-              Incoming
-            </Typography>
             {incoming.map((trade) => {
               return (
                 <>
@@ -172,6 +180,7 @@ const TradeCentre = () => {
                     Accept
                   </Button>
                   <Button
+                    sx={{marginLeft:"5px"}}
                     color="error"
                     variant="contained"
                     onClick={handleUpdate(trade, "REJECTED")}
@@ -183,17 +192,15 @@ const TradeCentre = () => {
             })}
           </>
         );
-      case "outgoing":
+      case "Outgoing":
         return (
           <>
-            <Typography align="center" variant="h6" component="div">
-              Outgoing
-            </Typography>
             {outgoing.map((trade) => {
               return (
                 <>
                   {renderTrade(trade.sellPlayer, trade.buyPlayer, false)}
                   <Button
+                    
                     color="error"
                     variant="contained"
                     onClick={handleUpdate(trade, "CANCELLED")}
@@ -205,12 +212,9 @@ const TradeCentre = () => {
             })}
           </>
         );
-      case "accepted":
+      case "Accepted":
         return (
           <>
-            <Typography align="center" variant="h6" component="div">
-              Accepted
-            </Typography>
             {accepted.map((trade) =>
               trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
                 ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
@@ -218,12 +222,9 @@ const TradeCentre = () => {
             )}
           </>
         );
-      case "rejected":
+      case "Rejected":
         return (
           <>
-            <Typography align="center" variant="h6" component="div">
-              Rejected
-            </Typography>
             {rejected.map((trade) =>
               trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
                 ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
@@ -231,12 +232,9 @@ const TradeCentre = () => {
             )}
           </>
         );
-      case "cancelled":
+      case "Cancelled":
         return (
           <>
-            <Typography align="center" variant="h6" component="div">
-              Cancelled
-            </Typography>
             {cancelled.map((trade) =>
               trade.sellPlayer.fantasyTeam!.id === data.fantasyTeam.id
                 ? renderTrade(trade.sellPlayer, trade.buyPlayer, false)
@@ -253,30 +251,29 @@ const TradeCentre = () => {
   return (
     <>
       <Box component={Paper}>
-        <div>
-          <Typography padding="15px" variant="h6" noWrap component="div">
-            Player Trades
-          </Typography>
-        </div>
         <Box sx={{ display: "flex" }}>
           <div>
             <List>
-              {renderMenuItem("Incoming", () => setSection("incoming"))}
-              {renderMenuItem("Outgoing", () => setSection("outgoing"))}
+              {renderMenuItem("Incoming")}
+              {renderMenuItem("Outgoing")}
             </List>
             <Divider />
             <List>
-              {renderMenuItem("Accepted", () => setSection("accepted"))}
-              {renderMenuItem("Rejected", () => setSection("rejected"))}
-              {renderMenuItem("Canceled", () => setSection("cancelled"))}
+              {renderMenuItem("Accepted")}
+              {renderMenuItem("Rejected")}
+              {renderMenuItem("Cancelled")}
             </List>
           </div>
           <Box
             component="main"
             sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
           >
-            <Toolbar />
+            <FullTradeContainer>
+            <Typography align="center" variant="h6" component="div">
+              {section}
+            </Typography>
             {renderSection()}
+            </FullTradeContainer>
           </Box>
         </Box>
       </Box>
