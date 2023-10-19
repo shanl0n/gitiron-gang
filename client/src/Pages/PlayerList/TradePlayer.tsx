@@ -41,7 +41,7 @@ const GET_FANTASY_TEAM = gql`
       }
     }
   }
-`
+`;
 interface GetFantasyTeamData {
   fantasyTeam: FantasyTeam;
 }
@@ -57,18 +57,22 @@ interface Props {
   onTrade: () => void;
 }
 
-const TradePlayer = ({ buyPlayerId, onTrade}: Props) => {
-  const [sellPlayerId, setSellPlayerId] = useState<string | undefined>(undefined);
+const TradePlayer = ({ buyPlayerId, onTrade }: Props) => {
+  const [sellPlayerId, setSellPlayerId] = useState<string | undefined>(
+    undefined
+  );
   const [showPlayerSelect, setShowPlayerSelect] = useState(false);
-  const { loading, error, data } = useQuery<GetFantasyTeamData>(GET_FANTASY_TEAM);
+  const { loading, error, data } =
+    useQuery<GetFantasyTeamData>(GET_FANTASY_TEAM);
 
   const [tradePlayer] = useMutation(TRADE_PLAYER);
   const handleTradePlayer = async () => {
     setShowPlayerSelect(false);
     const resp = await tradePlayer({
       variables: {
-        buyPlayerId, sellPlayerId
-      }
+        buyPlayerId,
+        sellPlayerId,
+      },
     });
     if (resp.errors) {
       alert("Error!");
@@ -80,33 +84,44 @@ const TradePlayer = ({ buyPlayerId, onTrade}: Props) => {
   const handleSelectPlayer = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setSellPlayerId(event.target.value);
-  }
+  };
 
   const renderPlayerSelect = (player: Player) => {
-    return <Radio checked={player.id === sellPlayerId} value={player.id} onChange={handleSelectPlayer}/>
-  }
+    return (
+      <Radio
+        checked={player.id === sellPlayerId}
+        value={player.id}
+        onChange={handleSelectPlayer}
+      />
+    );
+  };
 
   const renderPlayerSelectContent = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error.message}</p>;
     if (!data) return <p>No players found</p>;
-  
-    return <PlayerTable players={data.fantasyTeam.players} renderAction={renderPlayerSelect}/>
+
+    return (
+      <PlayerTable
+        players={data.fantasyTeam.players}
+        renderAction={renderPlayerSelect}
+      />
+    );
   };
 
   return (
     <>
-    <ConfirmationDialog
-          open={showPlayerSelect}
-          title="Trade Player"
-          confirmText="Trade"
-          onCancel={() => setShowPlayerSelect(false)}
-          onConfirm={handleTradePlayer}
-          content={renderPlayerSelectContent()}
-        />
-    <IconButton color="warning" onClick={() => setShowPlayerSelect(true)}>
-      <SwapHorizontalCircle />
-    </IconButton>
+      <ConfirmationDialog
+        open={showPlayerSelect}
+        title="Trade Player"
+        confirmText="Trade"
+        onCancel={() => setShowPlayerSelect(false)}
+        onConfirm={handleTradePlayer}
+        content={renderPlayerSelectContent()}
+      />
+      <IconButton color="warning" onClick={() => setShowPlayerSelect(true)}>
+        <SwapHorizontalCircle />
+      </IconButton>
     </>
   );
 };

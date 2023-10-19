@@ -19,7 +19,19 @@ const Wrapper = styled.nav`
   padding: 0 0 0 82px;
   min-height: 50px;
   align-items: center;
-  width: 100%;
+  width: 100vp;
+  display: flex; 
+  justify-content: space-between;
+`;
+
+const LeftSide = styled.div`
+  display: flex;
+  width: 20rem;
+  justify-content: space-between;
+`
+
+const RightSide = styled.div`
+  margin-right: 2rem;
 `;
 
 interface Props {
@@ -29,23 +41,25 @@ interface Props {
 const Navbar = ({ onLogout }: Props) => {
   return (
     <Wrapper className="Navbar">
-      <Link sx={{ fontSize: "20px", textDecoration: "none" }}>League</Link>
-      <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/myteam">
-        My Team
-      </Link>
-      <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/players">
-        Players
-      </Link>
-      <Link
-        sx={{ fontSize: "20px", textDecoration: "none" }}
-        href="/gamecentre"
-      >
-        Game Center
-      </Link>
-      <div className="Navbar-rightAlign">
+      <LeftSide>
+        <Link sx={{ fontSize: "20px", textDecoration: "none" }}>League</Link>
+        <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/myteam">
+          My Team
+        </Link>
+        <Link sx={{ fontSize: "20px", textDecoration: "none" }} href="/players">
+          Players
+        </Link>
+        <Link
+          sx={{ fontSize: "20px", textDecoration: "none" }}
+          href="/gamecentre"
+        >
+          Game Center
+        </Link>
+      </LeftSide>
+      <RightSide className="Navbar-rightAlign">
         <Notifications />
         <Logout onLogout={onLogout} />
-      </div>
+      </RightSide>
     </Wrapper>
   );
 };

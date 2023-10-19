@@ -44,10 +44,11 @@ const PlayerTable = ({ players, renderAction }: Props) => {
             </TableCell>
           </TableRow>
           <TableRow style={{ maxHeight: 1 }}>
-            {renderAction && <TableCell className="Primary" align="center">
-              Action
-            </TableCell>
-}
+            {renderAction && (
+              <TableCell className="Primary" align="center">
+                Action
+              </TableCell>
+            )}
             <TableCell className="Primary" align="center">
               Player
             </TableCell>
@@ -105,15 +106,14 @@ const PlayerTable = ({ players, renderAction }: Props) => {
                   },
                 }}
               >
-                {renderAction && <TableCell align="center">
-                  {renderAction(player)}
-                </TableCell>
-          }
+                {renderAction && (
+                  <TableCell align="center">{renderAction(player)}</TableCell>
+                )}
                 <TableCell align="right">
                   <div>{player.name}</div>
                   <div className="PositionName">{player.position}</div>
-                </TableCell>
-                <TableCell align="right">Manager</TableCell>
+                </TableCell>  
+                <TableCell align="right">{player.fantasyTeam?.name}</TableCell>
                 <TableCell align="right">
                   {renderStat(stats.passing.completions)}
                 </TableCell>

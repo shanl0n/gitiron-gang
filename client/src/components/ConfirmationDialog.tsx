@@ -19,7 +19,7 @@ interface Props {
 
 const ConfirmationDialog = ({title, content, confirmText, onCancel, onConfirm, open}:Props) => {
   return (
-    <Dialog component={Paper} open={open}>
+    <Dialog maxWidth='lg' component={Paper} open={open}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{content}</DialogContent>
       <DialogActions>
